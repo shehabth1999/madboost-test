@@ -25,10 +25,6 @@
 {% endblock %}
 {% block container %}
 <!-- Add Coming Soon banner -->
-<div class="coming-soon-banner pt-5">
-  <h1 class="pt-5">Coming Soon!</h1>
-  <p>We are working on something awesome! Stay tuned for updates.</p>
-</div>
 <div class="homepage">
   <div class="container">
     <!-- ------------------------- Landing ------------------------- -->
@@ -40,6 +36,10 @@
       <div class="image col-6">
         <img src="{% static 'homepage/images/logo.png' %}" class="img-fluid" alt="Landing">
       </div>
+    </div>
+    <div class="coming-soon-banner">
+      <h1 class="">Launching Soon!</h1>
+      <p>We are working on something awesome! Stay tuned for updates.</p>
     </div>
 
 
@@ -150,6 +150,10 @@
           {% endfor %}
         </div>
       </div>
+    </div>
+    <div class="coming-soon-banner">
+      <h1 class="">Launching Soon!</h1>
+      <p>We are working on something awesome! Stay tuned for updates.</p>
     </div>
 
     <!-- ------------------------- Import Feedback Component ------------------------- -->
