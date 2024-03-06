@@ -1,0 +1,21 @@
+.message-container {
+  width: 550px !important;
+  position: absolute;
+  z-index: 100;
+  top: -280px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+@media (max-width: 767px) {
+  .message-container {
+    width: 100% !important;
+  }
+}
+.error-message {
+  background-color: #4f1a0f91;
+  box-shadow: 0px 0px 8px 2px red;
+}
+.success-message {
+  background-color: #4f1a0f91;
+  box-shadow: 0px 0px 8px 2px yellowgreen;
+}

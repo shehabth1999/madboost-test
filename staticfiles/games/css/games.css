@@ -1,0 +1,104 @@
+.games-container {
+  position: relative;
+  background-color: var(--background-color);
+}
+/* Start Landing */
+.games-container .games-landing {
+  width: 100%;
+  height: 690px;
+  background-image: url('./../images/games_bg.jpg');
+  background-size: cover;
+  background-position-y: -700px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.games-container .games-landing::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-image: url('./../images/bg_cover.png');
+}
+.games-landing .heading {
+  position: absolute;
+  top: 30%;
+  text-align: center;
+  color: white;
+}
+.games-landing .heading h1 {
+  font-weight: bolder;
+  font-size: 64px;
+  font-family: var(--heading-font);
+  letter-spacing: 3px;
+}
+@media (max-width: 1199px) {
+  .games-landing .heading h1 {
+    font-size: 32px !important;
+  }
+}
+.games-landing .heading p {
+  font-size: 1.5rem;
+  font-weight: 300;
+}
+@media (max-width: 1199px) {
+  .games-landing .heading p {
+    font-size: 16px;
+  }
+}
+/* Start Games */
+.games {
+  position: relative;
+  margin-top: -250px; /* Adjust this value as needed */
+}
+.games .game {
+  width: 450px;
+  height: 705px;
+  border-radius: calc(var(--main-radius) * 2);
+  border: 1px solid #332A27;
+  position: relative;
+  background: linear-gradient(360deg, #1E1814 31.88%, rgba(30, 24, 20, 0) 69.08%);
+}
+.games .game::after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: calc(var(--main-radius) * 2);
+  background: linear-gradient(360deg, #1E1814 31.88%, rgba(30, 24, 20, 0) 69.08%);
+}
+.games .game .banner {
+  width: 100%;
+  position: relative;
+}
+
+.games .game .banner::after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-top-left-radius: calc(var(--main-radius) * 2);;
+  border-top-right-radius: calc(var(--main-radius) * 2);;
+  background-image: url('./../images/bg_cover.png');
+}
+.games .game .name {
+  width: 100%;
+  position: absolute;
+  bottom: 55px;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.games .game .name img {
+  width: 272px;
+  height: 120px;
+}
+/* End Games */

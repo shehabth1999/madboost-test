@@ -1,0 +1,95 @@
+.register-container, .login-container {
+  background-image: url('./../images/magicpattern.png');
+  background-size: cover;
+  background-color: var(--main-color);
+}
+.custom-input {
+  background-color: transparent;
+  border: 2px solid transparent;
+  border-radius: 1.5rem;
+  background: 
+    linear-gradient(to right, var(--main-color), var(--main-color)), 
+    linear-gradient(to right, #0F7991, #897AF9, #BF65CF, #83420F); 
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  transition: var(--main-transition);
+}
+.custom-input:focus, .custom-textarea:focus {
+  background-color: transparent;
+  border: 2px solid transparent;
+  border-radius: 1.5rem;
+  background: 
+    linear-gradient(to right, var(--main-color), var(--main-color)), 
+    linear-gradient(to right,  #83420F, #BF65CF, #897AF9, #0F7991); 
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;      
+  box-shadow: none !important;
+  color: white;
+}
+input[type=file]::file-selector-button {
+  border: 0px;
+  border-right: 1px solid #e5e5e5;
+  padding: 13px;
+  margin-right: 20px;
+  transition: .5s;
+}
+.custom-label {
+  color: white !important;
+  font-size: 17px;
+  padding-left: 10px;
+}
+.custom-textarea {
+  background-color: transparent;
+  border: 2px solid transparent;
+  border-radius: 1.5rem;
+  background: 
+    linear-gradient(to right, var(--main-color), var(--main-color)), 
+    linear-gradient(to right, #0F7991, #897AF9, #BF65CF, #83420F); 
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+.custom-select {
+  background-color: transparent;
+  height: 50px;
+  border: 2px solid transparent;
+  border-radius: 1.5rem;
+  background: 
+    linear-gradient(to right, var(--main-color), var(--main-color)), 
+    linear-gradient(to right, #0F7991, #897AF9, #BF65CF, #83420F); 
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+.register-image, .login-image {
+  position: absolute;
+  top: 21%;
+  left: 3%;
+}
+/* .register, .login {
+  height: 500px;
+} */
+/* .register .register-form {
+  height: 500px;
+  overflow: auto;
+} */
+.login .login-form  {
+  /* height: 0px; */
+  overflow: auto;
+}
+.register .register-form::-webkit-scrollbar-thumb, .login .login-form::-webkit-scrollbar-thumb {
+  background: transparent;  
+}

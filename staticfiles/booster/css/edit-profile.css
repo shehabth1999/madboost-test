@@ -1,0 +1,47 @@
+a {
+  display: block;
+}
+#image-clear_id {
+  display: inline-flex;
+  height: auto;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+.edit-container {
+  background-image: url('./../images/bg.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  background-color: var(--main-color);
+  position: relative;
+}
+.edit-container::after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgb(0 0 0 / 40%);
+}
+.edit-container .edit {
+  position: relative;
+  z-index: 100;
+}
+.information, .fields {
+  background-color: #3d22625e;
+  overflow: hidden;
+}
+.information .image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+}
+.information .design-image img {
+  width: 100%;
+  margin-top: 2rem;
+}
+.change-password {
+  background-color: #3d22625e;
+  width: 700px;
+  max-width: 100%;
+}

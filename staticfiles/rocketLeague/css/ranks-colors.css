@@ -1,0 +1,40 @@
+.bronze {
+  background: 
+  linear-gradient(180deg, #43373300 0%, #433733 45.27%),
+  linear-gradient(180deg, #5B2B1F 0%, #43373300 100%);
+}
+.silver {
+  background: 
+  linear-gradient(180deg, #43373300 0%, #433733 45.27%),
+  linear-gradient(180deg, #7F999E 0%, #43373300 100%);
+}
+.gold {
+  background: 
+  linear-gradient(180deg, #43373300 0%, #433733 45.27%),
+  linear-gradient(180deg, #BE843E 0%, #43373300 100%);
+}
+.platinum {
+  background: 
+  linear-gradient(180deg, #43373300 0%, #433733 45.27%),
+  linear-gradient(180deg, #609692 0%, #43373300 100%);
+}
+.diamond {
+  background: 
+  linear-gradient(180deg, #43373300 0%, #433733 45.27%),
+  linear-gradient(180deg, #0BA1F7 0%, #43373300 100%);
+}
+.champion {
+  background: 
+  linear-gradient(180deg, #43373300 0%, #433733 45.27%),
+  linear-gradient(180deg, #A378E2 0%, #43373300 100%);
+}
+.grand-champion {
+  background: 
+  linear-gradient(180deg, #43373300 0%, #433733 45.27%),
+  linear-gradient(180deg, #FF144A 0%, #43373300 100%);
+}
+.supersonic-legend {
+  background: 
+  linear-gradient(180deg, #43373300 0%, #433733 45.27%),
+  linear-gradient(180deg, #A582A3 0%, #43373300 100%);
+}

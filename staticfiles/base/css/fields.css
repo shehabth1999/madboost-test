@@ -1,0 +1,125 @@
+.custom-btn {
+  padding: 7px 20px;
+  border-radius: 32px;
+  text-align: center;
+  font-family: var(--heading-font) !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  border: 5px solid var(--secondary-color);
+}
+
+/* Medium */
+@media (max-width: 1199px) {
+  .custom-btn {
+    width: 125px !important;
+    font-size: 14px !important;
+  }
+}
+@media (max-width: 992px) {
+  .custom-btn {
+    width: 100px !important;
+    font-size: 10px !important;
+  }
+}
+.custom-btn:hover {
+  color: white;
+}
+.custom-btn.filled {
+  color: white;
+  background-color: var(--secondary-color);
+}
+.custom-btn.outline {
+  color: var(--secondary-color);
+}
+
+/* .custom-input:not([type='radio']) {
+  background-color: transparent;
+  border: 2px solid transparent !important;
+  border-radius: 1.5rem !important;
+  background:
+    linear-gradient(to right, var(--main-color), var(--main-color)),
+    linear-gradient(to right, #F9CE34, #EE2A7B, #6228D7) !important;
+  background-clip: padding-box, border-box !important;
+  background-origin: padding-box, border-box !important;
+  height: 50px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  color: white !important;
+  transition: var(--main-transition) !important;
+} */
+
+/* .custom-input[type=checkbox] {
+  display: inline-block !important;
+  height: 12px !important;
+  margin-left: 1rem !important;
+} */
+
+/* .custom-input:focus,
+.custom-textarea:focus {
+  background-color: transparent !important;
+  border: 2px solid transparent !important;
+  border-radius: 1.5rem !important;
+  background:
+    linear-gradient(to right, var(--main-color), var(--main-color)),
+    linear-gradient(to right, #6228D7, #EE2A7B, #F9CE34) !important;
+  background-clip: padding-box, border-box !important;
+  background-origin: padding-box, border-box !important;
+  box-shadow: none !important;
+  color: white !important;
+} */
+
+/* input[type=file]::file-selector-button {
+  border: 0px;
+  border-right: 1px solid #e5e5e5;
+  padding: 13px;
+  margin-right: 20px;
+  transition: .5s;
+} */
+
+/* .custom-label {
+  color: white !important;
+  font-size: 17px;
+  padding-left: 10px;
+} */
+
+/* .custom-textarea {
+  background-color: transparent !important;
+  border: 2px solid transparent !important;
+  border-radius: 1.5rem !important;
+  background:
+    linear-gradient(to right, var(--main-color), var(--main-color)),
+    linear-gradient(to right, #F9CE34, #EE2A7B, #6228D7) !important;
+  background-clip: padding-box, border-box !important;
+  background-origin: padding-box, border-box !important;
+  border-radius: 20px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  color: white !important;
+} */
+
+/* .custom-select {
+  background-color: transparent !important;
+  height: 50px !important;
+  border: 2px solid transparent !important;
+  border-radius: 1.5rem !important;
+  background:
+    linear-gradient(to right, var(--main-color), var(--main-color)),
+    linear-gradient(to right, #F9CE34, #EE2A7B, #6228D7) !important;
+  background-clip: padding-box, border-box !important;
+  background-origin: padding-box, border-box !important;
+  border-radius: 20px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  color: var(--secondary-color) !important;
+} */
+
+/* .submit-btn {
+  border-radius: 3rem !important;
+  background-image: linear-gradient(to right, #15053C 0%, #9303B6 50%, #4A0774) !important;
+  padding: 0.5rem 2rem !important;
+} */

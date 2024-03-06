@@ -1,0 +1,78 @@
+/* Start Feedback */
+.feedbacks h1 {
+  font-family: var(--heading-font);
+  font-size: 48px;
+  font-weight: 600;
+}
+@media (max-width: 1199px) {
+  .feedbacks h1 {
+    font-size: 32px;
+  }
+}
+@media (max-width: 767px) {
+  .feedbacks h1 {
+    font-size: 21px;
+    line-height: 2;
+  }
+}
+.feedbacks .feedback {
+  background-color: var(--main-color);
+  border-radius: calc(var(--main-radius) * 2);
+  height: 260px;
+  overflow: hidden;
+}
+@media (max-width: 992px) {
+  .feedbacks .feedback {
+    height: 240px;
+  }
+}
+.feedback .customer-image img {
+  width: 56px;
+  height: 56px;
+  border-radius: calc(var(--main-radius) * 2);
+}
+.feedback .customer-info .rate {
+  padding: 0 9px;
+  border-radius: var(--main-radius);
+  background-color: #14151F;
+}
+.feedback .customer-info .rate p span i {
+  color: #F26E3E;
+  font-size: 14px;
+}
+/* Swiper Class */
+.feedbacks .swiper-button-prev::after,
+.feedbacks .swiper-button-next::after {
+  content: '';
+}
+.feedbacks .swiper-button-next,
+.feedbacks .swiper-button-prev {
+  width: initial;
+  height: initial;
+  font-size: 1.5rem;
+  color: white;
+  top: initial;
+  margin-top: initial;
+  bottom: 0;
+  z-index: 12;
+  font-weight: lighter;
+}
+.feedbacks .swiper-button-next i,
+.feedbacks .swiper-button-prev i {
+  background-color: var(--background-color);
+  padding: 3px;
+}
+.feedbacks .swiper-button-prev {
+  left: calc(50% - 50px);
+}
+.feedbacks .swiper-button-next {
+  right: calc(50% - 50px);
+}
+.feedbacks .swiper-pagination-bullet {
+  background: #D9D9D980;
+  opacity: 1;
+  font-weight: lighter;
+}
+.feedbacks .swiper-pagination-bullet-active {
+  background: #D9D9D9;
+}
