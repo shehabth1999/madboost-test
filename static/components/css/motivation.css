@@ -1,0 +1,70 @@
+/* Start Motivation */
+.motivation {
+  height: 448px;
+  border-radius: calc(var(--main-radius) * 2);;
+  background-image: url('./../images/motivation.jpg');
+  background-size: cover;
+  background-position: 400px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+@media (max-width: 1199px) {
+  .motivation {
+    background-position: 300px;
+  }
+}
+@media (max-width: 767px) {
+  .motivation {
+    height: 696px;
+    background-position-y: -75px;
+    background-position-x: -340px;
+    align-items: flex-end;
+  }
+}
+.motivation::after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: calc(var(--main-radius) * 2);
+  background: linear-gradient(90deg, #433733 52.8%, rgba(106, 73, 36, 0.5) 75.82%);
+}
+@media (max-width: 1199px) {
+  .motivation::after {
+    background: linear-gradient(90deg, #433733 55.03%, rgba(106, 73, 36, 0.5) 75.82%);
+  }
+}
+@media (max-width: 767px) {
+  .motivation::after {
+    background: linear-gradient(to top, #433733 52.8%, rgba(106, 73, 36, 0.5) 75.82%);
+  }
+}
+.motivation .text {
+  position: relative;
+  z-index: 100;
+}
+.motivation .text h1 {
+  font-family: var(--heading-font);
+  font-size: 40px;
+  font-weight: 600;
+}
+.motivation .text a {
+  font-size: 16px;
+}
+@media (max-width: 767px) {
+  .motivation .text h1 {
+    line-height: 1.5;
+    font-size: 24px;
+  }
+  .motivation .text h1 br {
+    margin-top: 32px;
+  }
+  .motivation .text a {
+    display: block;
+    width: 100% !important;
+  }
+}
+/* End Motivation */

@@ -1,0 +1,118 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Game Boosters{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'booster/css/edit-profile.css' %}">
+<link rel="stylesheet" href="{% static 'booster/css/can-choose-me.css' %}">
+<link rel="stylesheet" href="{% static 'base/css/fields.css' %}">
+{% endblock %}
+{% block container %}
+<div class="edit-container p-lg-5 p-0 text-white" style="padding-top: 6rem !important;">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="py-3 mx-auto" style="width: 550px;">
+        <div class="alert {{ message.tags }} alert-dismissible mb-0 success-message" role="alert" >
+          {{ message }}
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+  <div class="container edit">
+    <div class="header text-center">
+      <h2>Edit Your Profile</h2>
+      <p class="text-secondary fs-5">Here you can find out all of the information about your account status and set your preferences</p>
+    </div>
+    <div class="row justify-content-between my-5">
+
+      <div class="col-lg-3 col-12 mb-lg-0 mb-4 information text-center p-5">
+        <div class="image mx-auto ">
+          {% if request.user.booster.image %}
+          <img src="{{ request.user.booster.image.url }}" class="image"  alt="Profile Photo"/>
+          {% else %}
+          <img src="{% static 'base/images/no_profile_image.png' %}" class="image" alt="No Profile Photo">
+          {% endif %}
+        </div>
+
+        <div class="name">
+          <p class="my-3">{{request.user.first_name}} {{request.user.last_name}}</p>
+        </div>
+
+        <div class="links">
+          <a href="{% url 'booster.profile' request.user.id %}" class="text-decoration-none my-3 d-block" style="color: var(--secondary-color);">View Profile</a>
+        </div>
+
+        <div class="can-choose-me d-flex justify-content-center align-items-center flex-wrap gap-2">
+          <form id="edit-profile-form" method="post" action="{% url 'edit.booster.profile' %}">
+            {% csrf_token %}
+            <span>Customer Can Choose Me</span>
+            <input type="checkbox" id="id_can_choose_me" class="can-choose-me-input" {% if request.user.booster.can_choose_me %}checked{% endif %} /><label for="id_can_choose_me" class="can-choose-me-label">Toggle</label>
+          </form>
+        </div>
+
+        <hr>
+
+        <div class="info">
+          <p>{{request.user.username}}</p>
+          
+          <p>{{request.user.email}}</p>
+          <p>{{request.user.about_you}}</p>
+          {% if request.user.booster.achived_rank_wr %}
+          <p class="text-capitalize fs-4">
+            <img class="rounded-circle shadow-4-strong" alt="avatar" src="{{ request.user.booster.achived_rank_wr.rank_image.url }}" style="width: 50px; height: 50px;"  />
+              {{request.user.booster.achived_rank_wr}}
+          </p>
+          {% endif %}
+        </div>
+
+        <div class="design-image d-lg-block d-none">
+          <img src="{% static 'booster/images/char.png' %}" alt="">
+        </div>
+      </div>
+
+      <div class="col-lg-8 col-12 fields p-5">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ profile_form.as_p }}
+          <button type="submit" name="profile_submit" class="btn fs-5 text-white rounded-5 px-4 py-2 mt-3" style="background-image: linear-gradient(to right, #15053C 0%, #9303B6 50%, #4A0774)">Save Profile Changes</button>
+        </form>
+      </div>
+
+    </div>
+    
+    <div class="change-password p-5 mx-auto">
+      <div class="content">
+        <h2>Change Password</h2>
+          <form method="post">
+            {% csrf_token %}
+            {{ password_form.as_p }}
+            <button type="submit" name="password_submit" class="btn fs-5 text-white rounded-5 px-4 py-2 mt-3" style="background-image: linear-gradient(to right, #15053C 0%, #9303B6 50%, #4A0774)">Change Password</button>
+          </form>
+        </div>
+      </div>
+    </div>  
+
+  </div>
+</div>
+{% endblock %}
+{% block script %}
+<script src="{% static 'booster/js/can-choose-me.js' %}"></script>
+<script>
+  var oldPasswordInput = document.getElementById('id_old_password');
+  oldPasswordInput.blur();
+
+  $('#id_can_choose_me').change(function () {
+    $.ajax({
+      type: 'POST',
+      url: '{% url "can_choose_me" %}', 
+      data: $('#edit-profile-form').serialize(),
+      success: function (data) {
+        console.log(data);
+      },
+      error: function (error) {
+        console.log(error);
+      }
+    });
+  });
+</script>
+{% endblock %}

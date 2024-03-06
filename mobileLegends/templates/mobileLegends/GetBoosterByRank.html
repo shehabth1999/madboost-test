@@ -1,0 +1,486 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %}Mobile Legends{% endblock %}
+{% block style %}
+<!-- BASE CSS -->
+<link href="{% static 'base/css/range.css'%}" rel="stylesheet" >
+<!-- SWIPER CSS -->
+<link href="{% static 'swiper/css/swiper-bundle.min.css'%}" rel="stylesheet">
+<!-- OUR STYLE -->
+<link href="{% static 'games/css/game.css'%}" rel="stylesheet" />
+<link href="{% static 'games/css/division.css'%}" rel="stylesheet" />
+<link href="{% static 'games/css/placement.css'%}" rel="stylesheet" />
+<!-- WILD RIFT RANKS COLORS -->
+<!-- <link href="{% static 'mobileLegends/css/ranks-colors.css'%}" rel="stylesheet" /> -->
+<!-- STYLE FEEDBACK -->
+<link href="{% static 'components/css/customer-feedbacks.css'%}" rel="stylesheet" />
+<!-- STYLE MOTIVATION -->
+<link href="{% static 'components/css/motivation.css'%}" rel="stylesheet" />
+<!-- STYLE INFORMATION -->
+<link href="{% static 'components/css/information.css'%}" rel="stylesheet" />
+{% endblock %}
+{% block container %}
+<div id="order-container" data-order="{{ order_get_rank_value }}"></div>
+<div class="game-container">
+
+  <div class="game-landing mobileLegends">
+    <div class="heading">
+      <h1>MOBILE LEGENDS</h1>
+      <p>Mythic player will boost you to your desired rank.</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="create-order">
+
+      <!-- Errors -->
+      {% if messages %}
+        {% for message in messages %}
+        <div class="py-3 mx-auto message-container">
+          <div class="alert {{ message.tags }} alert-dismissible mb-0 error-message" role="alert" >
+          {{ message }}
+          </div>
+        </div>
+        {% endfor %}
+      {% endif %}
+
+      <div class="choise mb-3">
+        <input type="radio" id="division-boost" name="radio-group-type" checked>
+        <label for="division-boost" class="radio-btn" style="width: 147px;">Rank Boost</label>
+        <input type="radio" id="placements-boost" name="radio-group-type">
+        <label for="placements-boost" class="radio-btn ms-md-4 ms-0 mt-md-0 mt-2" style="width: 147px;">Placement</label>
+      </div>
+
+      <div class="row row-cols-md-2 row-cols-1 justify-content-between gab-5" id="OrderNow">
+        <!-- Division Boost -->
+        <div class="choices-ranks division-boost">
+          <!-- Current -->
+          <div class="current" id="current">
+            <div class="d-flex justift-content-center align-item-center">
+              <div class="image me-4">
+                <img src="" alt="Current Rank Image" class="current-rank-selected-img" class="img-fluid" width="60" height="60">
+              </div>
+              <div class="text-white text">
+                <h5>Current Rank</h5>
+                <p>Select your current rank & information</p>
+              </div>
+            </div>
+
+            <!-- Ranks -->
+            <div class="ranks d-flex justify-content-start align-items-center flex-wrap mt-xl-2 mt-3">
+              {% for rank in ranks|slice:":9" %}
+              {% with mark=rank.mark %}
+              <input type="radio" id="radio{{rank.id}}" name="radio-group-current" data-id="{{rank.id}}" data-name="{{rank.rank_name}}" data-mark="{{mark.mark_number}}" data-img="{{rank.get_image_url}}" {% if forloop.counter0 == 2 %} checked {% endif %}>
+              <label for="radio{{rank.id}}" class="me-2"><img class="text-center" src="{{rank.get_image_url}}" width="30" height="30" /></label>
+              {% endwith %}
+              {% endfor %}
+            </div>
+
+            <!-- Divisions -->
+            <div class="current-dcontainer d-flex flex-wrap justify-content-start align-items-center mt-xl-3 mt-0">
+              <input type="radio" id="current-division0" name="radio-group-current-division" data-id="1">
+              <label for="current-division0" class="me-2 py-2 px-3">V</label>
+
+              <input type="radio" id="current-division1" name="radio-group-current-division" data-id="2">
+              <label for="current-division1" class="me-2 py-2 px-3">IV</label>
+
+              <input type="radio" id="current-division2" name="radio-group-current-division" data-id="3" checked>
+              <label for="current-division2" class="me-2 py-2 px-3">III</label>
+
+              <input type="radio" id="current-division3" name="radio-group-current-division" data-id="4">
+              <label for="current-division3" class="me-2 py-2 px-3">II</label>
+              
+              <input type="radio" id="current-division4" name="radio-group-current-division" data-id="5">
+              <label for="current-division4" class="me-2 py-2 px-3">I</label>
+              
+            </div>
+
+            <!-- Marks -->
+            <div class="current-mark-container">
+              <p class="text-white mt-4" style="font-size: 16px;">Stars</p>
+              <div class="select-container">
+                <select class="current-marks-select">
+                  <option value="1" class="current-marks" selected>1 Star</option>
+                  <option value="2" class="current-marks">2 Stars</option>
+                  <option value="3" class="current-marks">3 Stars</option>
+                  <option value="4" class="current-marks">4 Stars</option>
+                  <option value="5" class="current-marks">5 Stars</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Desired -->
+          <div class="desired" id="desired">
+            <div class="d-flex justift-content-center align-item-center">
+              <div class="image me-4">
+                <img src="" alt="Desired Rank Image" class="desired-rank-selected-img" class="img-fluid" width="60" height="60">
+              </div>
+              <div class="text-white text">
+                <h5>Desired Rank</h5>
+                <p>Select your desired rank & information</p>
+              </div>
+            </div>
+
+            <!-- Ranks -->
+            <div class="ranks d-flex justify-content-start align-items-center flex-wrap mt-xl-2 mt-3">
+              {% for rank in ranks %}
+              {% with mark=rank.mark %}
+              <input type="radio" id="radio{{rank.id}}{{rank.id}}" name="radio-group-desired" data-id="{{rank.id}}" data-name="{{rank.rank_name}}" data-mark="{{mark.mark_number}}" data-img="{{rank.get_image_url}}" {% if forloop.counter0 == 3 %} checked {% endif %}>
+              <label for="radio{{rank.id}}{{rank.id}}" class="me-2 mt-3"><img class="text-center" src="{{rank.get_image_url}}" width="30" height="30" /></label>
+              {% endwith %}
+              {% endfor %}
+            </div>
+
+            <!-- Division -->
+            <div id="desired-division" class="desired-dcontainer flex-wrap justify-content-start align-items-center d-flex mt-3">
+
+              <input type="radio" id="desired-division0" name="radio-group-desired-division" data-id="1">
+              <label for="desired-division0" class="me-2 py-2 px-3">V</label>
+
+              <input type="radio" id="desired-division1" name="radio-group-desired-division" data-id="2">
+              <label for="desired-division1" class="me-2 py-2 px-3">IV</label>
+
+              <input type="radio" id="desired-division2" name="radio-group-desired-division" data-id="3">
+              <label for="desired-division2" class="me-2 py-2 px-3">III</label>
+
+              <input type="radio" id="desired-division3" name="radio-group-desired-division" checked data-id="4">
+              <label for="desired-division3" class="me-2 py-2 px-3">II</label>
+
+              <input type="radio" id="desired-division4" name="radio-group-desired-division" data-id="5">
+              <label for="desired-division4" class="me-2 py-2 px-3">I</label>
+
+            </div>
+
+            <!-- Servers -->
+            <div class="server-container">
+              <p class="text-white mt-4" style="font-size: 16px;">Server</p>
+              <div class="select-container">
+                <select class="division-servers-select">
+                  <option value="North America">North America (NA)</option>
+                  <option value="Europe">Europe (EU)</option>
+                  <option value="Latin America">Latin America (LATAM)</option>
+                  <option value="Brazil">Brazil (BR)</option>
+                  <option value="Korea">Korea (KR)</option>
+                  <option value="Southeast Asia">Southeast Asia (SEA)</option>
+                  <option value="Japan">Japan (JP)</option>
+                  <option value="Oceania">Oceania (OCE)</option>
+                  <option value="Russia">Russia (RU)</option>
+                  <option value="Turkey">Turkey (TR)</option>
+                  <option value="Middle East">Middle East (MEA)</option>
+                  <option value="India">India (IN)</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Placements Boost -->
+        <div class="placements-boost">
+
+          <!-- Pervious Rank -->
+          <div class="pervious" id="pervious">
+            <div class="d-flex justift-content-center align-item-center">
+              <div class="image me-4">
+                <img src="" alt="Pervious Rank Image" class="pervious-rank-selected-img" class="img-fluid" width="60" height="60">
+              </div>
+              <div class="text-white text">
+                <h5>Pervious Rank</h5>
+                <p>Select your pervious rank & information</p>
+              </div>
+            </div>
+
+            <!-- Ranks -->
+            <div class="ranks d-flex justify-content-start align-items-center flex-wrap mt-4">
+              {% for rank in placements %}
+              <input type="radio" id="rank{{rank.id}}" name="placement-ranks" data-id="{{rank.id}}" data-price="{{rank.price}}" data-img="{{rank.get_image_url}}" {% if forloop.counter0 == 0 %} checked {% endif %}>
+              <label for="rank{{rank.id}}" class="me-2 mb-xl-3 mb-4"><img class="text-center" src="{{rank.get_image_url}}" width="30" height="30" /></label>
+              {% endfor %}
+            </div>
+
+            <!-- Servers -->
+            <div class="server-container mt-3">
+              <p class="text-white" style="font-size: 16px;">Server</p>
+              <div class="select-container">
+                <select class="placement-servers-select">
+                  <option value="North America">North America (NA)</option>
+                  <option value="Europe">Europe (EU)</option>
+                  <option value="Latin America">Latin America (LATAM)</option>
+                  <option value="Brazil">Brazil (BR)</option>
+                  <option value="Korea">Korea (KR)</option>
+                  <option value="Southeast Asia">Southeast Asia (SEA)</option>
+                  <option value="Japan">Japan (JP)</option>
+                  <option value="Oceania">Oceania (OCE)</option>
+                  <option value="Russia">Russia (RU)</option>
+                  <option value="Turkey">Turkey (TR)</option>
+                  <option value="Middle East">Middle East (MEA)</option>
+                  <option value="India">India (IN)</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Matches Amount -->
+          <div class="matches-amount" id="matches-amount">
+
+            <div class="d-flex justift-content-center align-item-center">
+              <div class="matches-number me-4">
+                <h1 class="num-of-match mb-0"></h1>
+              </div>
+              <div class="text-white text">
+                <h5>Matches Amount</h5>
+                <p>Select your desired amount of matches.</p>
+              </div>
+            </div>
+
+            <div class="range-container mt-5 pt-xl-0 pt-5">
+              <input type="range" min="1" max="5" value="0" id="game-count" /> 
+              <div class="step-indicator">
+                <span class="step">1</span>
+                <span class="step">2</span>
+                <span class="step">3</span>
+                <span class="step">4</span>
+                <span class="step">5</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="complate-order ps-3">
+          <!-- Checkout -->
+          <div class="checkout p-4">
+            <p class="fw-bold mb-0">Checkout</p>
+            <p class="mb-1">Select extra options from down below</p>
+            <div class="from-to d-flex justify-content-center align-items-center mt-xl-3 mt-4 p-2">
+              <!-- Division -->
+              <div class="division-boost from d-flex justify-content-center align-items-center me-md-3 me-1">
+                  <img src="" alt="Current Rank Image" class="current-rank-selected-img me-md-2 me-0" class="img-fluid" width="40" height="40">
+
+                  <p class="current-selected-info text-capitalize mb-0"></p>
+              </div>
+
+              <!-- Placement -->
+              <div class="placements-boost from d-flex justify-content-center align-items-center me-md-3 me-1">
+                <img src="" alt="Pervious Rank Image" class="pervious-rank-selected-img me-md-2 me-0" class="img-fluid" width="40" height="40">
+
+                <p class="pervious-selected-info text-capitalize mb-0 fs-5"></p>
+              </div>
+
+              <i class="fa-solid fa-chevron-right fs-4" style="color: var(--secondary-color);"></i>
+
+              <!-- Division -->
+              <div class="division-boost to d-flex justify-content-center align-items-center ms-md-3 ms-1">
+                  <img src="" alt="Desired Rank Image" class="desired-rank-selected-img me-md-2 me-0" class="img-fluid" width="40" height="40">
+
+                  <p class="desired-selected-info text-capitalize mb-0"></p>
+              </div>
+
+              <!-- Placement -->
+              <div class="placements-boost to d-flex justify-content-center align-items-center ms-md-3 ms-1">
+
+                <p class="game_count-selected-info text-capitalize mb-0 fs-5"></p>
+                
+              </div>
+            </div>
+          </div>
+
+          <!-- Extra Charges -->
+          <div class="extra-charges p-xl-4 px-4 py-5">
+            <!-- Solo Or Duo -->
+            <div class="switch-solo-duo p-1 my-xl-0 mt-1 mb-2">
+              <div class="solo ">
+                <input type="radio" id="solo-boosting" name="switch-between-solo-duo" value="solo" checked>
+                <label for="solo-boosting" class="solo-boosting-label"><i class="fa-solid fa-user me-1"></i> Solo</label>
+              </div>
+
+              <div class="duo">
+                <input type="radio" id="duo-boosting" name="switch-between-solo-duo" value="duo">
+                <label for="duo-boosting" class="duo-boosting-label"><i class="fa-solid fa-user-group me-1"></i> Duo</label>
+              </div>
+
+            </div>
+
+            <!-- Other Extra Charges -->
+            <div class="extra py-xl-2 py-3">
+              <!-- Turbo Boosting -->
+              <div class="turbo py-xl-2 py-3 d-flex justify-content-between align-items-center">
+                <div class="info">
+                  <p class="mb-0">Turbo Boost <span class="percent ms-1">20%</span></p>
+                </div>
+
+                  <div class="choose">
+                    <label class="switch" for="turbo-boosting">
+                      <input type="checkbox" id="turbo-boosting" name="extra-checkbox" value="turboBoost">
+                        <span class="slider round"></span>
+                    </label>
+                  </div>
+              </div>
+
+                <!-- Booster Agents -->
+                <div class="champions py-xl-2 py-3 d-flex justify-content-between align-items-center">
+                  <div class="info">
+                    <p class="mb-0">Booster Agents <span class="percent ms-1" style="background: #46D17980; color: #43C372">Free</span></p>
+                  </div>
+
+                    <div class="choose">
+                      <label class="switch" for="booster-agents">
+                        <input type="checkbox" id="booster-agents" name="extra-checkbox" value="boosterAgents">
+                          <span class="slider round"></span>
+                      </label>
+                    </div>
+                </div>
+
+                <!-- Stream Games -->
+                <div class="stream py-xl-2 py-3 d-flex justify-content-between align-items-center">
+                  <div class="info">
+                    <p class="mb-0">Stream Games <span class="percent ms-1">15%</span></p>
+                  </div>
+
+                    <div class="choose">
+                      <label class="switch" for="stream-games">
+                        <input type="checkbox" id="stream-games" name="extra-checkbox" value="streaming">
+                          <span class="slider round"></span>
+                      </label>
+                    </div>
+                </div>
+
+                <!-- Select Booster -->
+                <div class="select-booster py-xl-2 py-3 d-flex justify-content-between align-items-center">
+                  <div class="info">
+                    <p class="mb-0">Select Booster <span class="percent ms-1">10%</span></p>
+                  </div>
+
+                    <div class="choose">
+                      <label class="switch" for="select-booster">
+                        <input type="checkbox" id="select-booster" name="extra-checkbox" value="selectBooster">
+                          <span class="slider round"></span>
+                      </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="discount mt-xl-0 mt-3">
+              <form id="promo-form">
+                <input id="discount-id" type="text" name="discount" placeholder="Discount Code">
+                <input id="promo-form-submit" type="submit" value="Apply">
+              </form>
+              <div id="promo-details" class="pt-2">
+                <h6 style="visibility: hidden;">No Apply</h6>
+              </div>
+            </div>
+          </div>
+
+          <!-- Time -->
+          <div class="time d-flex justify-content-center align-items-center p-2">
+            <p class="text-white mb-0"><i class="fa-regular fa-clock me-1"></i><span class="fw-lighter"> Competition Time: </span>Duration</p>
+          </div>
+
+          <!-- Payment -->
+          <div class="payment px-4 py-2">
+            <div class="total-price d-flex justify-content-between align-item-center">
+              <p>Total Price:</p>
+              <p id="division-boost-price" class="division-boost price">$0</p>
+              <p id="placements-boost-price" class="placements-boost price">$0</p>
+            </div>
+
+            <div class="pay-form">
+              <!-- URLs -->
+              <div id="urls"
+                  data-paypal-url="{% url 'mobileLegends-paypal-redirect' %}"
+                  data-cryptomus-url="{% url 'mobileLegends-cryptomus-redirect' %}">
+              </div>
+              <!-- Division Form -->
+              <form method="post" id="division-boost-form" class="division-boost purchaseForm">
+                <input type="hidden" name="game_id" value="8">
+                <input type="hidden" name="game_type" value="D">
+                <!-- Division -->
+                <input type="hidden" name="current_rank" value="1">
+                <input type="hidden" name="current_division" value="1">
+                <input type="hidden" name="marks" value="1">
+                <input type="hidden" name="desired_rank" value="3">
+                <input type="hidden" name="desired_division" value="1">
+                <!-- Extra Fields -->
+                <input type="hidden" name="duo_boosting" id="duoBoosting" value=false>
+                <input type="hidden" name="select_booster" id="selectBooster" value=false>
+                <input type="hidden" name="turbo_boost" id="turboBoost" value=false>
+                <input type="hidden" name="booster_agents" id="boosterAgents" value=false>
+                <input type="hidden" name="streaming" id="streaming" value=false>
+                <!-- Other -->
+                <input type="hidden" name="server" id="server" value=false>
+                <input type="hidden" name="price" value="120">
+                <input type="hidden" id="chooseBoosterInput" name="choose_booster" value=0 readonly>
+                <input type="hidden" id="extendOrder" name="extend_order" value=0 readonly>
+                <input type="hidden" id="promo_send" name="promo_code" value='null' readonly>
+                <div class="purchase d-flex justify-content-between align-items-center">
+                  <!-- Paypal -->
+                  <button id="division-paypal-btn" type="button" class="paypal-btn">Pay with <img src="{% static 'games/images/PayPal.svg' %}" class="ms-2"  alt="Cryptomus" width="86.62" height="28.8"/></button>
+
+                  <!-- Cryptomus -->
+                  <button id="division-cryptomus-btn" type="button" class="cryptomus-btn">Pay with  <img src="{% static 'games/images/Crypto.png' %}" class="ms-2"  alt="Cryptomus" width="86.62" height="28.8"/></button>
+                </div>
+              </form>
+
+              <!-- Placement Form -->
+              <form method="post" id="placements-boost-form" class="placements-boost purchaseForm">
+                <input type="hidden" name="game_id" value="8">
+                <input type="hidden" name="game_type" value="P">
+                <!-- Placement -->
+                <input type="hidden" name="last_rank" value="0">
+                <input type="hidden" name="number_of_match" value="5">
+                <!-- Extra Fields -->
+                <input type="hidden" name="duo_boosting" id="duoBoosting" value=false>
+                <input type="hidden" name="select_booster" id="selectBooster" value=false>
+                <input type="hidden" name="turbo_boost" id="turboBoost" value=false>
+                <input type="hidden" name="booster_agents" id="boosterAgents" value=false>
+                <input type="hidden" name="streaming" id="streaming" value=false>
+                <!-- Other -->
+                <input type="hidden" name="server" id="server" value=false>
+                <input type="hidden" name="price" value="120">
+                <input type="hidden" id="chooseBoosterInput" name="choose_booster" value=0 readonly>
+                <input type="hidden" id="extendOrder" name="extend_order" value=0 readonly>
+                <input type="hidden" id="promo_send" name="promo_code" value='null' readonly>
+                <div class="purchase d-flex justify-content-between align-items-center">
+                  <!-- Paypal -->
+                  <button id="placement-paypal-btn" type="button" class="paypal-btn">Pay with <img src="{% static 'games/images/PayPal.svg' %}" class="ms-2"  alt="Cryptomus" width="86.62" height="28.8"/></button>
+
+                  <!-- Cryptomus -->
+                  <button id="placement-cryptomus-btn" type="button" class="cryptomus-btn">Pay with  <img src="{% static 'games/images/Crypto.png' %}" class="ms-2"  alt="Cryptomus" width="86.62" height="28.8"/></button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Import Motivation -->
+    {% include 'components/motivation.html' %}
+
+    <!-- Import Feedback Component -->
+    {% include 'components/customer_feedbacks.html' with feedbacks=feedbacks %}
+
+    <!-- Import Information Component -->
+    {% include 'components/information.html' %}
+  </div>
+</div>
+{% endblock %}
+{% block script %}
+<!-- SWIPER JS -->
+<script src="{% static 'swiper/js/swiper-bundle.min.js' %}"></script>
+<!-- OUR SCRIPTS -->
+<script src="{% static 'games/js/main.js' %}"></script>
+<script src="{% static 'games/js/pay-action.js' %}"></script>
+<script src="{% static 'games/js/range.js' %}"></script>
+<script src="{% static 'games/js/functions.js' %}"></script> 
+<script src="{% static 'games/js/constance.js' %}"></script> 
+<script src="{% static 'mobileLegends/js/division-placement-boost.js' %}"></script> 
+<script src="{% static 'components/js/customer-feedbacks.js'%}"></script>
+
+{% endblock %}

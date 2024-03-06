@@ -1,0 +1,30 @@
+.bronze {
+  background: 
+  linear-gradient(180deg, #43373300 0%, #433733 45.27%),
+  linear-gradient(180deg, #60967E 0%, #43373300 100%);
+}
+.silver {
+  background: 
+  linear-gradient(180deg, #43373300 0%, #433733 45.27%),
+  linear-gradient(180deg, #264564 0%, #43373300 100%);
+}
+.gold {
+  background: 
+  linear-gradient(180deg, #43373300 0%, #433733 45.27%),
+  linear-gradient(180deg, #BE843E 0%, #43373300 100%);
+}
+.platinum {
+  background: 
+  linear-gradient(180deg, #43373300 0%, #433733 45.27%),
+  linear-gradient(180deg, #234B5F 0%, #43373300 100%);
+}
+.diamond {
+  background: 
+  linear-gradient(180deg, #43373300 0%, #433733 45.27%),
+  linear-gradient(180deg, #9A8FE7 0%, #43373300 100%);
+}
+.king {
+  background: 
+  linear-gradient(180deg, #43373300 0%, #433733 45.27%),
+  linear-gradient(180deg, #AD8A54 0%, #43373300 100%);
+}

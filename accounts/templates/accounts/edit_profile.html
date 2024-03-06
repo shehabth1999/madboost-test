@@ -1,0 +1,86 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Game Boosters{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'booster/css/edit-profile.css' %}">
+<link rel="stylesheet" href="{% static 'base/css/fields.css' %}">
+{% endblock %}
+{% block container %}
+<div class="edit-container p-lg-5 p-0 text-white" style="padding-top: 6rem !important;">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="py-3 mx-auto" style="width: 550px;">
+        <div class="alert {{ message.tags }} alert-dismissible mb-0 message" role="alert" >
+          {{ message }}
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+  <div class="container edit">
+    <div class="header text-center">
+      <h2>Edit Your Profile</h2>
+      <p class="text-secondary fs-5">Here you can find out all of the information about your account status and set your preferences</p>
+    </div>
+    <div class="row justify-content-between my-5">
+
+      <div class="col-lg-3 col-12 mb-lg-0 mb-4 information text-center p-5">
+        <div class="image mx-auto">
+          {% if request.user.image %}
+          <img src="{{ request.user.image.url }}" class="image"  alt="Profile Photo"/>
+          {% else %}
+          <img src="{% static 'base/images/no_profile_image.png' %}" class="image" alt="No Profile Photo">
+          {% endif %}
+        </div>
+
+        <div class="name">
+          <p class="my-4">{{request.user.first_name}} {{request.user.last_name}}</p>
+        </div>
+        
+        <div class="links">
+          <a href="{% url 'accounts.profile' %}" class="text-decoration-none my-3 d-block" style="color: var(--secondary-color);">View Profile</a>
+        </div>
+
+        <hr>
+
+        <div class="info">
+          <p>{{request.user.username}}</p>
+          <p>{{request.user.email}}</p>
+        </div>
+
+        <!-- <div class="design-image d-lg-block d-none">
+          <img src="{% static 'booster/images/char.png' %}" alt="">
+        </div> -->
+      </div>
+
+      <div class="col-lg-8 col-12 fields p-5">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ profile_form.as_p }}
+          <button type="submit" name="profile_submit" class="btn fs-5 text-white rounded-5 px-4 py-2 mt-3" style="background-image: linear-gradient(to right, #15053C 0%, #9303B6 50%, #4A0774)">Save Profile Changes</button>
+        </form>
+      </div>
+
+    </div>
+    
+    <div class="row change-password p-5 mx-lg-auto mx-0">
+      <div class="content">
+        <h2>Change Password</h2>
+          <form method="post">
+            {% csrf_token %}
+            {{ password_form.as_p }}
+            <button type="submit" name="password_submit" class="btn fs-5 text-white rounded-5 px-4 py-2 mt-3" style="background-image: linear-gradient(to right, #15053C 0%, #9303B6 50%, #4A0774)">Change Password</button>
+          </form>
+        </div>
+      </div>
+    </div>  
+
+  </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+  var oldPasswordInput = document.getElementById('id_old_password');
+  oldPasswordInput.blur();
+</script>
+{% endblock %}

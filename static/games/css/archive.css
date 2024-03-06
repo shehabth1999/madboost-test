@@ -1,0 +1,83 @@
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none; 
+  width: 100%;
+  cursor: pointer;
+  outline: none;
+  border-radius: 15px;
+  height: 4px;
+  background: var(--secondary-color);
+}
+
+/* Thumb: webkit */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none; 
+  height: 30px;
+  width: 30px;
+/*   background-color: #f50; remove this*/
+  background-image: url("https://ibaslogic.github.io/hosted-assets/smile.png");
+  background-size: cover;
+  border-radius: 50%;
+  border: none;
+  transition: .2s ease-in-out;
+  /*  rotate thumb  */
+  transform: rotateZ(var(--thumb-rotate, 0deg));
+}
+
+/* Thumb: Firefox */
+input[type="range"]::-moz-range-thumb {
+  height: 30px;
+  width: 30px;
+/*   background-color: #f50; */
+  background-image: url("https://ibaslogic.github.io/hosted-assets/smile.png");
+  background-size: cover;
+  border-radius: 50%;
+  border: none;
+  transition: .2s ease-in-out;
+  /*  rotate thumb  */
+  transform: rotateZ(var(--thumb-rotate, 0deg));
+}
+
+/* Hover, active & focus Thumb: Webkit */
+input[type="range"]::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 10px rgba(255,85,0, .1)
+}
+input[type="range"]:active::-webkit-slider-thumb {
+  box-shadow: 0 0 0 13px rgba(255,85,0, .2)
+}
+input[type="range"]:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 13px rgba(255,85,0, .2)
+}
+
+/* Hover, active & focus Thumb: Firfox */
+
+input[type="range"]::-moz-range-thumb:hover {
+  box-shadow: 0 0 0 10px rgba(255,85,0, .1)
+}
+input[type="range"]:active::-moz-range-thumb {
+  box-shadow: 0 0 0 13px rgba(255,85,0, .2)
+}
+input[type="range"]:focus::-moz-range-thumb {
+  box-shadow: 0 0 0 13px rgba(255,85,0, .2)    
+}
+
+/*=============
+Aesthetics 
+=========================*/
+
+.range {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 500px;
+  height: 4rem;
+  width: 80%;
+  padding: 0px 10px;
+}
+
+.value, .game-count-value, .number-win-value {
+  font-size: 26px;    
+  width: 50px;
+  text-align: center;
+}

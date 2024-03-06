@@ -1,0 +1,136 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %}Wild Rift Orders{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'games/css/orders.css'%}">
+{% endblock %}
+{% block container %}
+<div class="orders-container container-fluid p-5 text-white">
+  <div class="container">
+    {% if messages %}
+      {% for message in messages %}
+      <div class="py-3 mx-auto" style="width: 550px;">
+        <div class="alert {{ message.tags }} alert-dismissible mb-0 error-message" role="alert" >
+        {{ message }}
+        </div>
+      </div>
+      {% endfor %}
+    {% endif %}
+    <div class="row">
+      <div class="col-12">
+        <!-- --------------- Division Boost Orders --------------- -->
+        <div class="division-boost-order p-5  rounded-3">
+          <!-- <h4 class="my-4">Division Boost Orders</h4> -->
+          <div id="order_list" class="row">
+
+          </div>
+        </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+  function changeTimer(seconds, onTimeOut, orderId) {
+    const timerElement = document.getElementById(`timer_${orderId}`);
+    timerElement.style.display = 'inline'
+    if (!timerElement) {
+        console.error(`Timer element with id 'timer_${orderId}' not found.`);
+        return;
+    }
+    let refresher = 0;
+    function updateTimerDisplay() {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+
+        const formattedTime = `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+        timerElement.textContent = `${formattedTime}`;
+
+        // Execute the callback when the timer reaches zero
+        if (seconds === 0 && typeof onTimeOut === 'function') {
+            onTimeOut(orderId);
+            clearTimeout(timeoutId);
+        }
+
+        seconds--;
+        refresher++;
+        console.log(refresher)
+        if(refresher%20 === 0){
+          onTimeOut(orderId);
+          clearTimeout(timeoutId);
+        }
+
+        if (seconds >= 0) {
+           var timeOut = setTimeout(updateTimerDisplay, 1000);
+        } else{
+          timerElement.style.display = 'none'
+        }
+    }
+
+    // Initial call to start the timer
+    updateTimerDisplay();
+}
+  let host = window.location.host
+  const orderSocket = new WebSocket('ws://' + window.location.host + '/ws/order/');
+  orderSocket.onmessage = function(e){
+      let data = JSON.parse(e.data)
+      console.log('data',data)
+      if(data.type === 'order'){
+          let orderContainer = document.getElementById('order_list')
+          orderContainer.innerHTML = '';
+          data.order.forEach(order => {
+              const timeSocket = new WebSocket('ws://' + window.location.host + '/ws/price/' + order.id + '/');
+              timeSocket.onmessage = function (e) {
+                let time_price = JSON.parse(e.data);
+                console.log(time_price);
+                if (time_price.type === 'time_with_price'){
+                  console.log('${order.details}')
+                  orderContainer.insertAdjacentHTML('beforeend',
+                  `<div class="col-xl-6 col-md-6 mb-4 text-dark">
+                    <div class="card shadow h-100 py-2 orders">
+                      <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-uppercase ">${order.name}</h5>
+                        <div class="d-flex justify-content-between align-items-center my-2">
+                          <p class="mb-0">${order.details}</p>
+                        </div>
+                        <!------------------- Time ----------------->
+                        <div class='d-flex justify-content-between align-items-center price-time py-3 my-2'>
+                          <p class="h5 mb-0 division-price" id='actual_price_${order.id}'>${time_price.price}$</p> 
+                          <p id="timer_${order.id}" style="display: inline; color: var(--secondary-color)" class="h5 mb-0 ms-2"></p> 
+                          <div id="final_price_${order.id}" style="display: none; color: var(--secondary-color)" class="h5 mb-0 ms-2"><i class="fa-solid fa-star" style="color: gold;"></i> Final Price</div>
+                        </div>
+      
+                        <div class="d-flex justify-content-end align-items-center">
+                          <a href='${order.url}' class="fs-5 text-decoration-none" style="color: var(--main-color)"><i class="fa-solid fa-mug-hot"></i> Calm</a>
+                        </div>
+      
+                      </div>
+                    </div>
+                  </div>`
+                );
+                }
+                if (time_price.type === 'update_price'){
+                  document.querySelector(`#actual_price_${order.id}`).innerText=
+                  `${time_price.price}$`
+                  console.log('price updated')
+                }
+                if (time_price.time > 0){
+                  changeTimer(time_price.time+2, onTimeOutFunction,order.id);
+                  }
+                  else{
+                    let priceElement = document.getElementById(`final_price_${order.id}`);
+                    priceElement.style.display = "inline";
+                  }
+                  function onTimeOutFunction() {
+                    console.log("Executing onTimeOutFunction.");
+                    timeSocket.send(JSON.stringify({ order_id: order.id }));
+                  }
+              };
+          });
+      }
+  }
+
+
+</script>
+{% endblock %}

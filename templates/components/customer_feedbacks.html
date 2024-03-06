@@ -1,0 +1,46 @@
+{% load static %}
+<div class="feedbacks py-5">
+  <h1 class="py-md-5 py-3 text-center">Trusted by Thousands<br />of Happy Customer</h1>
+  <div class="swiper mb-5">
+    <div class="feedbacks-swiper">
+      {% if feedbacks %}
+      <div class="swiper-wrapper py-5 mb-3">
+        {% for feedback in feedbacks %}
+          <div class="swiper-slide feedback p-4">
+            <div class="customer-info d-flex justify-content-between align-items-center mb-3">
+              <div class="d-flex">
+                <div class="customer-image me-3">
+                  <img src="{% static 'base/images/no_profile_image.jpg' %}" alt="Customer Image">
+                </div>
+
+                <div class="customer-data">
+                  <p class="mb-0">{{feedback.customer.first_name}} {{feedback.customer.last_name}}</p>
+                  <p class="mb-0" style="color: #FFFFFF80;">{{feedback.customer.username}}</p>
+                </div>
+              </div>
+
+              <div class="rate">
+                <p class="mb-0">{{feedback.rate}} <span class="ms-1"><i class="fa-solid fa-star"></i></span></p>
+              </div>
+            </div>
+            <p>{{feedback.text}}</p>
+          </div>
+        {% endfor %}
+      
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="swiper-button-prev">
+        <i class="fa-solid fa-arrow-left fs-6"></i>
+      </div>
+
+      <div class="swiper-button-next">
+        <i class="fa-solid fa-arrow-right fs-6"></i>
+      </div>
+
+      <!-- Pagination -->
+      <div class="swiper-pagination"></div>
+      {% endif %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %}Login{% endblock %}
+{% block style %}
+<link href="{% static 'accounts/css/profile.css'%}" rel="stylesheet" />
+{% endblock %}
+{% block container %}
+    <div class="profile py-5" id='pp'>
+        <div class="container py-5">
+            <div class="personal-info row">
+                <div class="row col-6 align-items-end">
+                    {% if request.user.image %}
+                    <img src="{{ request.user.image.url }}" class="profile-image col-4" alt="profile" width="100"/>
+                    {% else %}
+                    <img src="{% static 'base/images/no_profile_image.png' %}" class="profile-image col-4" alt="profile" width="100" alt="No Profile Photo">
+                    {% endif %}
+                    <div class="info col-8">
+                        <p class="fs-5 text-white fw-bold">{{user.first_name}} {{user.last_name}}</p>
+                        <p class="fs-5 text-white">{{user}}</p>
+                        <p class="fs-5 text-white">{{user.email}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+<script src="{% static  'accounts/js/accounts.js' %}"></script>
+{% endblock %}

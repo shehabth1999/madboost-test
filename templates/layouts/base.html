@@ -1,0 +1,193 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="{% static 'bootstrap/css/bootstrap.css'%}" rel="stylesheet" />
+  <link href="{% static 'fontawesome/css/all.css' %}" rel="stylesheet">
+  <link href="https://unpkg.com/aos@next/dist/aos.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'base/css/master.css'%}" />
+  <link rel="stylesheet" href="{% static 'base/css/fields.css' %}">
+  <link rel="stylesheet" href="{% static 'base/css/framework.css' %}">
+
+  <title>{% block title %}{% endblock %}</title>
+  {% block style %}
+  {% endblock %}
+</head>
+
+<body>
+  <!-- Start Header -->
+  <div class="nav" id="nav">
+    <div class="container">
+      <div class="nav-row row justify-content-md-start justify-content-between align-items-center">
+
+        <div class="col-3 p-0">
+          <a href="{% url 'homepage.index' %}" class="logo">
+            <img src="{% static 'base/images/logo.png' %}" class="img-fluid" alt="Logo">
+          </a>
+        </div>
+
+        <div class="main-nav col-9 p-0 text-md-start text-end ">
+          <i class="fa-solid fa-bars toggle-menu"></i>
+          <ul class="links">
+            <li>
+              <ul class="main-links">
+                <li>
+                  <a href="{% url 'games.games' %}">Games</a>
+                </li>
+    
+                <li>
+                  <a href="">Store</a>
+                </li>
+    
+                <li>
+                  <a href="">Boosters</a>
+                </li>
+    
+                <li>
+                  <a href="">Reviews</a>
+                </li>
+    
+                <li>
+                  <a href="">How We Work</a>
+                </li>
+              </ul>
+            </li>
+
+            <li>
+              <ul class="user-links">
+                {% if request.user.id %}
+                  {% if request.user.is_booster %}
+                    <li>
+                      <a  class="custom-btn filled me-3" style="width: 200px;">Profile</a>
+                    </li>
+                  {% else %}
+                    <li>
+                      <a class="custom-btn filled me-3" style="width: 200px;">Profile</a>
+                    </li>
+                  {% endif %}
+                  <li>
+                    <a class="custom-btn filled" style="width: 180px;">Log Out</a>
+                  </li>
+                  {% else %}
+                    <li>
+                      <a  class="custom-btn outline me-3" >Sign Up</a>
+                    </li>
+                    <li>
+                      <a class="custom-btn filled">Log In</a>
+                    </li>
+                  {% endif %}
+              </ul>
+            </li>
+          </ul>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- End Header -->
+
+  <!-- Start Container -->
+  {% block container %}
+  {% endblock %}
+  <!-- End Container -->
+
+  <!-- Start Footer -->
+  <div class="footer">
+
+    <div class="info py-4">
+      <div class="container">
+        <div class="row justify-content-between align-items-center ">
+          <div class="col-lg-2 col-md-3 col-12">
+            <img src="{% static 'base/images/logo.png' %}" class="img-fluid footer-logo" width="300" alt="Logo">
+          </div>
+          <div class="col-lg-10 col-md-9 col-12 text-white">
+            <p class="mb-0 footer-text" style="font-size: 16px;">
+              MadBoost is an independent entity and is not endorsed or affiliated with Activision Blizzard, Riot Games, Electronic Arts, Amazon Games, or
+              Respawn Entertainment. The views and opinions expressed by Boosting Factory do not necessarily reflect those of the individuals officially involved
+              in producing or managing Heroes of the Storm, Valorant, Overwatch, Call of Duty, New World, and League of Legends. All trademarks and logos are
+              the property of their respective owners. All submitted art content remains the copyright of its original copyright holder.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact py-4">
+      <div class="container">
+        <div class="row justify-content-between align-items-center">
+
+          <div class="col-md-9 col-12">
+            <ul class="links">
+              <li>
+                <a href="">Contact us</a>
+              </li>
+  
+              <li>
+                <a href="">Report</a>
+              </li>
+  
+              <li>
+                <a href="">Terms of Service</a>
+              </li>
+  
+              <li>
+                <a href="">Privacy Policy</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="col-md-3 col-12">
+            <ul class="social">
+              <li>
+                <a href="" class="facebook me-2">
+                  <i class="fa-brands fa-facebook"></i>
+                </a>
+              </li>
+              <li>
+                <a href="" class="instgram me-2">
+                  <i class="fa-brands fa-instagram"></i>
+                </a>
+              </li>
+              <li>
+                <a href="" class="youtube me-2">
+                  <i class="fa-brands fa-youtube"></i>
+                </a>
+              </li>
+              <li>
+                <a href="" class="x-twitter me-2">
+                  <i class="fa-brands fa-twitter"></i>
+                </a>
+              </li>
+              <li>
+                <a href="" class="tiktok">
+                  <i class="fa-brands fa-tiktok"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+        <p class="mb-0 text-light text-md-start text-center copyright">&copy; 2024 MadBoost - All Rights Reserved</p>
+      </div>
+    </div>
+  </div>
+  <!-- End Footer -->
+  <script src="{% static  'jQuery/jquery-3.7.0.js' %}"></script>
+  <script src="{% static  'base/js/base.js' %}"></script>
+  <!-- <script src="{% static  'base/js/script.js' %}"></script> -->
+  <script src="{% static 'bootstrap/js/bootstrap.js'%}"></script>
+  <script src="{% static 'bootstrap/js/bootstrap.bundle.js'%}"></script>
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
+  {% block script %}
+  {% endblock %}
+</body>
+
+</html>

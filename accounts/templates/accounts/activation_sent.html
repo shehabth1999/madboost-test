@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Activation</title>
+        <link href="{% static 'base/css/master.css'%}" rel="stylesheet" />
+        <link href="{% static 'bootstrap/css/bootstrap.css'%}" rel="stylesheet" />
+        <link href="{% static 'fontawesome/css/all.css' %}" rel="stylesheet">
+        <style>
+            body {
+              background-image: linear-gradient(to top, #37175E 0%, #582984 50%, #4A0774) !important;
+            }
+        
+            .gmail-btn {
+              background-color: #5278BD;
+              color: white;
+              font-size: 1.5rem;
+              padding: 0.5rem 3.5rem;
+              transition: 0.5s;
+            }
+        
+            .gmail-btn:hover {
+              border: 1px solid #5278BD;
+              transform: scale(0.9);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container p-5 text-white">
+            <h4>Game Boosters</h4>
+            <div class="content text-center py-5">
+              <h3 class="my-2">Check Your Inbox</h3>
+              <img src="{% static 'accounts/images/send-email.png' %}" alt="" width="150">
+              <p class="my-3">Click on the link we sent to</p>
+              <p class="my-3"><span class="fw-bold">Sarah@gmail.com</span> to finish your account</p>
+              <p>setup.</p>
+              <a href="https://mail.google.com/" target="_blank" class="btn text-white gmail-btn"><img src="{% static 'accounts/images/google.png' %}" class="me-2" width="20" /> Open Gmail</a>
+            </div>
+          </div>
+        <script src="{% static  'jQuery/jquery-3.7.0.js' %}"></script>
+        <script src="{% static  'base/js/base.js' %}"></script>
+        <script src="{% static  'base/js/script.js' %}"></script>
+        <script src="{% static 'bootstrap/js/bootstrap.js'%}"></script>
+        <script src="{% static 'bootstrap/js/bootstrap.bundle.js'%}"></script>
+    </body>
+</html>

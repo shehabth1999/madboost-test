@@ -1,0 +1,336 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Game Boosters{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'accounts/css/customer_order.css' %}">
+{% endblock %}
+{% block container %}
+<div class="containter-fluid customer-order-body">
+  <div class="container py-5 customer-order text-white">
+    <div class="row justify-content-between ">
+
+      <div class="col-lg-3 col-12 mb-lg-0 my-5 information shadow p-5 text-center">
+
+        <div class="user-info">
+          {% if order.order.booster %}
+            {% if order.order.booster.booster.image %}
+            <img src="{{ order.order.booster.booster.image.url }}" class="profile-image col-4" alt="profile" />
+            {% else %}
+            <img src="{% static 'base/images/no_profile_image.jpg' %}" class="profile-image" alt="No Profile Photo">
+            {% endif %}
+            <h4 class="my-3">{{order.order.booster.first_name}} {{order.order.booster.last_name}}</h4>
+            <a href="{% url 'booster.profile' order.order.booster.id %}" class="fs-5" style="color: var(--secondary-color)">Booster Profile
+              &rarr;</a>
+            <div>
+              {% if order.order.game_type == 'D' %}
+
+              <a class="btn btn-success m-3" href="{% url order.order.game.link %}?extend={{order.order.id}}">Extend Order</a>
+              {% endif %}
+              <form id="tipBoosterForm" action="{% url 'tip_booster' %}" method="POST" class="text-end mt-3">
+                {% csrf_token %}
+                
+                <input type="hidden" name="order_id" value="{{ order.order.id }}">
+                <input type="hidden" name="booster" value="{{ order.order.booster }}">
+                <div class="input-group mb-3">
+                  <!-- <span class="input-group-text" id="basic-addon1">$</span> -->
+                  <input type="number" required name="tip" class="form-control" placeholder="Tip"
+                    aria-label="Tip">
+                </div>
+                <button id='submitTipButton' type="submit" class="btn tip-booster-btn">Tip Booster</button>
+              </form>
+            </div>
+          {% else %}
+          <center class="fw-bold"><i class="fa-regular fa-clock"></i> Waiting For Booster ...</center>
+          {% endif %}
+          
+        </div>
+        <hr>
+
+        <div class="order-info my-4">
+          <!-- <div class="from row">
+            <p class="my-3 text-uppercase col-4 px-0">From</p>
+            <img class="text-center col-4 px-0" src="{{order.current_rank.get_image_url}}" width="70" height="70" />
+            <p class="my-3 text-uppercase col-4 px-0">{{order.current_rank}} {{ order.current_division|romanize_division_original }}</p>
+          </div> -->
+
+          <!-- <i class="fa-solid fa-angle-down my-3" style="color: var(--secondary-color);"></i> -->
+
+          {% if order.order.game_type == 'D' %}
+          <!-- Division -->
+          <div class="current row">
+            <p class="my-3 text-uppercase col-4 px-0">Now</p>
+            <img class="text-center col-4 px-0" src="{{order.reached_rank.get_image_url}}" />
+            {% if order.order.game.link == 'wildRift' or order.order.game.link == 'lol' or order.order.game.link == 'pubg' or order.order.game.link == 'tft' %}
+            <p class="my-3 text-uppercase col-4 px-0">{{order.reached_rank}} {{ order.reached_division|romanize_division }}</p>
+            {% elif order.order.game.link == 'valorant' or order.order.game.link == 'rocketLeague' %}
+            <p class="my-3 text-uppercase col-4 px-0">{{order.reached_rank}} {{ order.reached_division|romanize_division_original }}</p>
+            {% elif order.order.game.link == 'hearthstone' %}
+            <p class="my-3 text-uppercase col-4 px-0">{{order.reached_rank}} {{ order.reached_division|ten_romanize_division }}</p>
+            {% elif order.order.game.link == 'hok' %}
+            <p class="my-3 text-uppercase col-4 px-0">{{order.reached_rank}} {{ order.reached_division|five_romanize_division }}</p>
+            {% endif %}
+          </div>
+
+          <i class="fa-solid fa-angle-down my-3" style="color: var(--secondary-color);"></i>
+
+          <div class="to row">
+            <p class="my-3 text-uppercase col-4 px-0">TO</p>
+            <img class="text-center col-4 px-0" src="{{order.desired_rank.get_image_url}}" />
+            {% if order.order.game.link == 'wildRift' or order.order.game.link == 'lol' or order.order.game.link == 'pubg' or order.order.game.link == 'tft' %}
+            <p class="my-3 text-uppercase col-4 px-0">{{order.desired_rank}} {{ order.desired_division|romanize_division }}</p>
+            {% elif order.order.game.link == 'valorant' or order.order.game.link == 'rocketLeague' %}
+            <p class="my-3 text-uppercase col-4 px-0">{{order.desired_rank}} {{ order.desired_division|romanize_division_original }}</p>
+            {% elif order.order.game.link == 'hearthstone' %}
+            <p class="my-3 text-uppercase col-4 px-0">{{order.desired_rank}} {{ order.desired_division|ten_romanize_division }}</p>
+            {% elif order.order.game.link == 'hok' %}
+            <p class="my-3 text-uppercase col-4 px-0">{{order.desired_rank}} {{ order.desired_division|five_romanize_division }}</p>
+            {% endif %}
+          </div>
+          {% elif order.order.game_type == 'P' %}
+          <!-- Placement -->
+          <div class="last">
+            <p class="my-3 text-secondary px-0">Placement Boost</p>
+            <p class="my-3 text-uppercase px-0">Last Rank</p>
+            <img class="text-center px-0" src="{{order.last_rank.get_image_url}}" width="200" height="200"  />
+            <p class="my-3 text-uppercase px-0">{{order.last_rank.rank_name}}</p>
+            <p class="my-3 text-uppercase px-0">Number Of Matches : <span class="text-secondary fs-5">{{order.number_of_match}}</span></p>
+          </div>
+          {% elif order.order.game_type == 'S' %}
+          <!-- Seasonal -->
+          <div class="last">
+            <p class="my-3 text-secondary px-0">Seasonal Reward</p>
+            <p class="my-3 text-uppercase px-0">Current Rank</p>
+            <img class="text-center px-0" src="{{order.current_rank.get_image_url}}" width="200" height="200"  />
+            <p class="my-3 text-uppercase px-0">{{order.current_rank.rank_name}}</p>
+            <p class="my-3 text-uppercase px-0">Number of Wins : <span class="text-secondary fs-5">{{order.number_of_wins}}</span></p>
+          </div>
+          {% elif order.order.game_type == 'T' %}
+          <!-- Tournament -->
+          <div class="last">
+            <p class="my-3 text-secondary px-0">Tournament Boost</p>
+            <p class="my-3 text-uppercase px-0">Current League</p>
+            <img class="text-center px-0" src="{{order.current_league.get_image_url}}" width="200" height="200"  />
+            <p class="my-3 text-uppercase px-0">{{order.current_league.rank_name}}</p>
+          </div>
+          {% endif %}
+          
+        </div>
+        <hr>
+        {% if order.order.message %}
+        <p class="text-danger">{{order.order.message}}</p>
+        {% endif %}
+
+        <div class="game-data">
+          <form action="{% url 'set.customer.data' %}" method="POST">
+            {% csrf_token %}
+            {% if error %} <p class="text-danger">{{error}}</p> {% endif %}
+            <input type="hidden" name="order_id" value="{{ order.order.id }}">
+            <input type="hidden" name="admins_chat_slug" value="{{ admins_chat_slug }}">
+            <div class="input-group mb-3">
+              <input type="text" required name="gamename" class="form-control" placeholder="Username" value="{% if order.order.customer_gamename %} {{order.order.customer_gamename}} {% endif %}" {% if order.order.data_correct %}readonly{% endif %} aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+
+            {% if not order.order.duo_boosting %}
+            <div class="input-group mb-3">
+              <input type="text" required name="password" class="form-control" placeholder="Password" value="{% if order.order.customer_password %} {{order.order.customer_password}} {% endif %}" aria-label="Password" aria-describedby="basic-addon1" {% if order.order.data_correct %}readonly{% endif %} >
+            </div>
+            {% endif %}
+
+            {% if not order.order.data_correct %}
+            <div class="text-end">
+              <button type="submit" class="btn submit-btn" >Submit</button>
+            </div>
+            {% endif %}
+          </form>
+          
+        </div>
+      </div>
+
+      <div class="col-lg-9 col-12 px-lg-4 px-0">
+        <center>
+          <button class='BoosterChatButton clicked_button' id='BoosterChatButton'>Booster Chat</button>
+          <button class='AdminsChatButton' id='AdminsChatButton'>Admins Chat</button>
+        </center>
+
+        <!-- Chat With Booster -->
+        <div class="BoosterChatContent mt-lg-0 my-4" id='BoosterChatContent'>
+          <h4 id="chat-booster">Chat With Booster</h4>
+          <div class="chat-booster p-4" id='chat-box'>           
+            <div class="container messages-section">
+              <div class="row">
+                <div class="col-12 row-cols-1 align-content-between">
+                  <div class="form-group px-4 py-2 chat-customer-container">
+                    {% if messages %}
+                    <div class="chatbox" id="chatbox" style="padding: 4px 2px;">
+                      {% for message in messages %}
+                      <div
+                        class="chat-message {% if message.user == request.user %} {% if message.msg_type == 2 %} tip-message {%else%} userMessage {% endif %} {% else %} otherMessage {% endif %}" style="background-color: transparent !important;">
+                        {% if message.msg_type == 2 %}
+                        <h4><span class="badge" style="background-color: var(--secondary-color);">{{ message.content }}</span></h4>
+                          <!-- <div class="mb-1 message-tip"></div> -->
+                        {% else %}
+                          {% if request.user != message.user %}
+                          <div class="image">
+                            {% if message.user.user.image %}
+                            <img src="{{message.user.user.image.url}}" alt="" width="40" height="40">
+                            {% else %}
+                            <img src="{% static 'base/images/no_profile_image.jpg' %}" alt="" width="40" height="40">
+                            {% endif %}
+                          </div>
+                          {% endif %}
+                          <div class="message p-3 rounded-3 ">
+                            {% if message.user.username != request.user.username  %}
+                            <p class="username mb-1">
+                              {{ message.user.first_name }} {{ message.user.last_name }}
+                            </p>
+                            {% endif %}
+                            <p class="content mb-1">{{ message.content }}</p>
+                            <p class="text-end mb-1" style="font-size: 10px; color:#ffffffbf"> {{message.created_on}} </p>
+                          </div>
+                        {% endif %}
+                      </div>
+                      {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="chatbox" id="chatbox" style="padding: 4px 2px;"></div>
+                    <b class="noMessageBooster">No Messages in this Room.</b>
+                    {% endif %}
+                  </div>
+                  <form id='booster_chat_form'>
+                    {% if room.active %}
+                    <div class="form-group d-flex justify-content-center mx-4 mt-2">
+                      <input class="form-control" style="width: 80%;" placeholder="Enter text here" id="my_input"
+                        type="text" required>
+                        <button class="btn sendButton mx-3" id="submit_button" type="button" value="Send">
+                          <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    {% else %}
+                    <div class="chatbox fw-bold" id="chatbox">
+                      <div class="chat-message text-center">
+                        Closed Chat
+                      </div>
+                    </div>
+                    {% endif %}
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat With Admin -->
+        <div class="AdminsChatContent" id='AdminsChatContent'>
+          <h4 id="chat-admin">Chat With Admin</h4>
+          <div class="chat-admin p-4" id='chat-admin-box'>
+            <div class="container messages-section">
+              <div class="row justify-content-center">
+                <div class="col-12 row-cols-1 align-content-between">
+                  <div class="form-group px-4 py-2 chat-message chat-customer-container" id='chat-admin-container'>
+                    {% if admins_messages %}
+                    <div class="admins_chatbox" id="admins_chatbox" style="padding: 4px 2px;">
+                      {% for message in admins_messages %}
+                      <div
+                        class="admins_chat_message {% if message.user == request.user %} userMessage {% else %} otherMessage {% endif %}">
+                        {% if request.user != message.user %}
+                        <div class="image">
+                          {% if message.user.image %}
+                          <img src="{{message.user.image.url}}" alt=""width="40" height="40">
+                          {% else %}
+                          <img src="{% static 'base/images/no_profile_image.jpg' %}" alt="" width="40" height="40">
+                          {% endif %}
+                        </div>
+                        {% endif %}
+                        <div class="message p-3 rounded-3 ">
+                          {% if message.user.username != request.user.username  %}
+                          <p class="username mb-1">
+                            {{ message.user.first_name }} {{ message.user.last_name }}
+                          </p>
+                          {% endif %}
+                          <p class="content mb-1">{{ message.content }}</p>
+                          <p class="text-end mb-1" style="font-size: 10px; color:#ffffffbf"> {{message.created_on}} </p>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="admins_chatbox" id="admins_chatbox" style="padding: 4px 2px;"></div>
+                    <b class="noMessageAdmin">No Messages in this Room.</b>
+                    {% endif %}
+                  </div>
+                  <form id='admin_chat_form'>
+                    {% if admins_room.active %}
+                    <div class="form-group d-flex justify-content-center mx-4 mt-2">
+                      <input class="form-control" style="width: 80%;" placeholder="Enter text here" id="admins_my_input"
+                        type="text" required>
+                        <button class="btn sendButton mx-3" id="admins_submit_button" type="button" value="Send">
+                          <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    {% else %}
+                    <div class="admins_chatbox fw-bold" id="admins_chatbox" style="margin-top: 2rem;">
+                      <div class="admins_chat_message text-center">
+                        Closed Chat
+                      </div>
+                    </div>
+                    {% endif %}
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Choose Booster -->
+        {% if order.order.booster is null %}
+          {% if order.order.select_booster %}
+        <h4 id="choose-booster">Choose Booster</h4>
+        <div class="choose-booster p-4">
+            <div class="">
+              {% for booster in boosters %}
+              {% if booster != user %} 
+              <div class="booster d-flex justify-content-between align-items-center">
+                <div class="data mb-3">
+                  {% if booster.image %}
+                  <img src="{{ booster.image.url }}" alt="profile" width="50" height='50' style="border-radius: 50%;" />
+                  {% else %}
+                  <img src="{% static 'base/images/no_profile_image.jpg' %}"  width="50" height='50' style="border-radius: 50%;" alt="No Profile Photo">
+                  {% endif %}
+                  <span class="ms-4">{{booster.booster.first_name}} {{booster.booster.last_name}}</span>
+                </div>
+
+                <form action="{% url 'choose.booster' %}" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="chosen_booster_id" value="{{ booster.booster.id }}">
+                  <input type="hidden" name="order_id" value="{{ order.order.id }}">
+                  <button type="submit" class="btn submit-btn">Choose</button>
+                </form>
+              </div>
+              {% endif %}
+              {% endfor %}
+            </div>
+        </div>
+        {% endif %}{% endif %} 
+      </div>
+    </div>
+  </div>
+</div>
+  <div>
+    {{slug|json_script:"room_slug"}}
+    {{admins_chat_slug|json_script:"admins_chat_slug"}}
+    {{admins_chat_slug|json_script:"admins_chat_slug"}}
+    {{request.user.username|json_script:"user"}}
+    {{admins_room.name|json_script:"admin_room"}}
+    {{room.name|json_script:'booster_room_name'}}
+    {{order.order.booster.first_name|json_script:'booster_first_name'}}
+    {{order.order.booster.last_name|json_script:'booster_last_name'}}    
+    {{order.order.booster.image|json_script:'booster_image'}}    
+  </div>
+  {% endblock %}
+  {% block script %}
+  <script>
+    var staticUrl = "{% static 'base/images/no_profile_image.jpg' %}";
+  </script>
+  <script src='{% static "accounts/js/customer_side_chat.js" %}'></script>
+  {% endblock %}

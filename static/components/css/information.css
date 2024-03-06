@@ -1,0 +1,27 @@
+/* Start Information */
+.information .icon-image {
+  width: 79px;
+  height: 75.41px;
+  border-radius: calc(var(--main-radius) * 2);
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.information p.head {
+  font-family: var(--heading-font);
+  font-size: 1.5rem;
+}
+@media (max-width: 767px) {
+  .information p.head {
+    font-size: 1rem;
+  }
+}
+.information p:not(.head) {
+  font-weight: lighter;
+  font-size: 16px;
+}
+/* End Information */

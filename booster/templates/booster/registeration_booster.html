@@ -1,0 +1,32 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %}Register{% endblock %}
+{% block style %}
+    <link href="{% static 'accounts/css/forms.css'%}" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'base/css/fields.css' %}">
+{% endblock %}
+{% block container %}
+<div class="register-container p-5 " style="padding-top: 6rem !important;">
+    <div class="container register"  >
+        <div class="d-lg-block d-none register-image">
+            <img src="{% static 'accounts/images/register-image.png' %}" alt="" width="500" />
+        </div> 
+        <div class="row">
+            <div class="offset-lg-4 offset-lg-0 col-lg-8 col-12 register-form px-lg-5 px-0" >
+                <form method="post" enctype="multipart/form-data">
+                    <div class="form row row-cols-lg-2 row-cols-1 justify-content-between align-items-center">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn fs-5 text-white rounded-5 px-4 py-2 mt-3" style="background-image: linear-gradient(to right, #15053C 0%, #9303B6 50%, #4A0774)">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script src="{% static  'accounts/js/accounts.js' %}"></script>
+{% endblock %}

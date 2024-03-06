@@ -1,0 +1,42 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %}Games{% endblock %}
+{% block style %}
+<!-- OUR STYLE -->
+<link href="{% static 'games/css/games.css'%}" rel="stylesheet" />
+{% endblock %}
+{% block container %}
+<div class="games-container">
+  <div class="games-landing">
+
+    <div class="heading">
+      <h1>Games</h1>
+      <p>One of our boosters will boost you to your desired rank.</p>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div class="games">
+      <div class="row row-cols-lg-3 row-cols-md-2 row-cols-1 justify-content-between">
+        {% for game in games %}
+        <div class="game mb-5 p-0">
+
+          <div class="banner">
+            <img src="{{game.get_banner_image_url}}" alt="{{game.name}}" class="img-fluid">
+          </div>
+
+          <div class="name">
+            <img src="{{game.get_name_image_url}}" alt="{{game.name}}" class="img-fluid text-center">
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+{% block script %}
+
+{% endblock %}

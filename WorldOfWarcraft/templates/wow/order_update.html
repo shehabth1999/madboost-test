@@ -1,0 +1,43 @@
+<div class="updata-now">
+  <h5 class="my-4">Now Rank</h5>
+  <form action="{% url 'order.update.rating' %}" method="POST">
+    {% csrf_token %}
+    {% if error %} <p class="text-danger">{{error}}</p> {% endif %}
+    <input type="hidden" name="order_id" value="{{ order.order.order.id }}">
+    <input type="hidden" name="order_game_id" value="{{ order.order.order.game_id }}">
+
+    <div class="mb-3">
+      <select class="form-select custom-select" required name="reached_rank" id="reached_rank">
+        {% for rank in pubg_ranks %}
+        {% with mark=rank.mark %}
+        <option value="{{ rank.id }}" data-mark="{{ mark.mark_number }}" {% if rank.rank_name|lower == order.order.reached_rank|lower %} selected {% endif %}>{{ rank.rank_name }}</option>
+        {% endwith %}
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="input-group mb-3">
+      <select class="form-select custom-select" required name="reached_division" id="reached_division">
+        <option value="1" {% if order.order.reached_division == 1 %}selected{% endif %}>IV</option>
+        <option value="2" {% if order.order.reached_division == 2 %}selected{% endif %}>III</option>
+        <option value="3" {% if order.order.reached_division == 3 %}selected{% endif %}>II</option>
+        <option value="4" {% if order.order.reached_division == 4 %}selected{% endif %}>I</option>
+      </select>
+    </div>
+
+    <div class="input-group mb-3">
+      <select class="form-select custom-select" required name="reached_marks" id="reached_marks">
+        <option value="0" {% if order.order.reached_marks == 0 %}selected{% endif %}>0 - 20</option>
+        <option value="1" {% if order.order.reached_marks == 1 %}selected{% endif %}>21 - 40</option>
+        <option value="2" {% if order.order.reached_marks == 2 %}selected{% endif %}>41 - 60</option>
+        <option value="3" {% if order.order.reached_marks == 3 %}selected{% endif %}>61 - 80</option>
+        <option value="4" {% if order.order.reached_marks == 4 %}selected{% endif %}>81 - 99</option>
+        <option value="5" {% if order.order.reached_marks == 5 %}selected{% endif %}>Series</option>
+      </select>
+    </div>
+
+    <div class="text-end">
+      <button type="submit" class="btn submit-btn">Update Rating</button>
+    </div>
+  </form>
+</div>

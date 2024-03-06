@@ -1,0 +1,11 @@
+{% autoescape off %}
+Hi {{user.username}}
+
+Please Use The Link Below To Verify Your Account.
+
+
+{{domain}}{{ activation_url }}
+    
+If You Didn't Request This, Please Ignore This E-mail.
+
+{% endautoescape %}

@@ -1,0 +1,41 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %}Login{% endblock %}
+{% block style %}
+<link href="{% static 'accounts/css/forms.css'%}" rel="stylesheet" />
+<link rel="stylesheet" href="{% static 'base/css/fields.css' %}">
+{% endblock %}
+{% block container %}
+<div class="login-container p-5 " style="padding-top: 6rem !important;">
+    <div class="container login">
+        <div class="d-lg-block d-none login-image">
+            <img src="{% static 'accounts/images/register-image.png' %}" alt="" width="500" />
+        </div>
+        <div class="row align-items-center justify-content-center " style="height: 500px;">
+            <form method="post" enctype="multipart/form-data" class="offset-lg-5 offset-lg-0 col-lg-7 col-12 login-form px-lg-5 px-0">
+                {% if error_message %}
+                <p style="color: red;">{{ error_message }}</p>
+                {% endif %}
+                {% csrf_token %}
+                <!-- {{ form.username.label_tag }} {{ form.username }}
+                {{ form.password.label_tag }} {{ form.password }}
+                {{ form.as_p }} -->
+                <div class="mb-3">
+                    <label for="username" class="form-label custom-label">Username</label>
+                    <input type="text" name="username" class="form-control custom-input" id="username">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label custom-label">Password</label>
+                    <input type="password" name="password" class="form-control custom-input" id="password">
+                </div>
+                <div class="text-end">
+                    <button type="submit" class="btn fs-5 text-white rounded-5 px-4 py-2 mt-3" style="background-image: linear-gradient(to right, #15053C 0%, #9303B6 50%, #4A0774)">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script src="{% static  'accounts/js/accounts.js' %}"></script>
+{% endblock %}

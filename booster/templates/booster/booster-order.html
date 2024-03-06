@@ -1,0 +1,441 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Game Boosters : {{request.user}}{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'booster/css/booster-order.css' %}">
+{% endblock %}
+{% block container %}
+<div class="containter-fluid booster-order-body text-white">
+  <div class="overlay py-5">
+    <div class="container py-5 booster-order text-white">
+      
+      <div class="orders-switch d-flex justify-content-between align-items-center p-4">
+        {% if orders %}
+        {% for order in orders %}
+          <input type="radio" id="order-{{order.order.order.id}}" data-order="order-{{order.order.order.id}}" name="radio-order" {% if forloop.counter0 == 0 %} checked {% endif %}>
+          <label for="order-{{order.order.order.id}}" class="me-2">Order {{order.order.order.name}}</label>
+        {% endfor %}
+        {% else %}
+        <h3 class="text-white text-center">You Havn't Any Order Yet</h3>
+        {% endif %}
+        <a class="btn orders-list-btn" href="{% url 'orders.jobs' %}"><i class="fa-solid fa-plus"></i></a>
+      </div>
+  
+      {% for order in orders %}
+      {{order.slug|json_script:"room_slug"}}
+      {{order.room.name|json_script:'booster_room_name'}}
+      {{request.user.username|json_script:"user"}}
+      {{order.order.order.customer.first_name|json_script:"customer_first_name"}}
+      {{order.order.order.customer.last_name|json_script:"customer_last_name"}}
+
+      <div class="row justify-content-between my-5 order order-{{order.order.order.id}}" data-order="order-{{order.order.order.id}}" data-slug="{{order.slug}}" data-room="{{order.room.name}}">
+        
+        <div class="col-lg-3 col-12 mb-lg-0 mb-4 information text-center">
+  
+          <div class="user-info shadow p-4">
+            <img src="{% static 'base/images/no_profile_image.jpg' %}" class="profile-image" alt="profile" />
+            <h4 class="my-3">{{order.order.order.customer.first_name}} {{order.order.order.customer.last_name}}</h4>
+            <hr>
+  
+            <p class="text-start">Order Information</p>
+            <div class="d-flex justify-content-between align-item-center">
+              <p class="text-secondary">Order Name</p>
+              <p>{{order.order.order.name}}</p>
+            </div>
+
+            <div class="d-flex justify-content-between align-item-center">
+              <p class="text-secondary">Order Type</p>
+              {% if order.order.order.game_type == 'D' and order.order.order.game.link != 'rocketLeague' %}
+              <p>Division Boost</p>
+              {% elif order.order.order.game_type == 'D' and order.order.ranked_type == 3 %}
+              <p>3vs3 Ranked</p>
+              {% elif order.order.order.game_type == 'D' and order.order.ranked_type == 2 %}
+              <p>2vs2 Ranked</p>
+              {% elif order.order.order.game_type == 'D' and order.order.ranked_type == 1 %}
+              <p>1vs1 Ranked</p>
+              {% elif order.order.order.game_type == 'P' %}
+              <p>Placement Boost</p>
+              {% elif order.order.order.game_type == 'S' %}
+              <p>Seasonal Reward</p>
+              {% elif order.order.order.game_type == 'T' %}
+              <p>Tournament Boost</p>
+              {% endif %}
+            </div>
+  
+            <div class="d-flex justify-content-between align-item-center">
+              <p class="text-secondary">Server</p>
+              <p>{{order.order.order.customer_server|server_name}}</p>
+            </div>
+  
+            <div class="d-flex justify-content-between align-item-center">
+              <p class="text-secondary">In-Game</p>
+              <p>{{order.order.order.customer_gamename}}</p>
+            </div>
+
+            {% if not order.order.order.duo_boosting  %}
+            <div class="d-flex justify-content-between align-item-center">
+              <p class="text-secondary">Password</p>
+              <p>{{order.order.order.customer_password}}</p>
+            </div>
+            {% endif %}
+
+            <form action="{% url 'confirm.details' %}" method="POST">
+              {% csrf_token %}
+              <input type="hidden" name="order_id" value="{{ order.order.order.id }}">
+              <button type="submit" class="btn submit-btn">Confirm Details & Start</button>
+            </form>
+
+            <form action="{% url 'ask.customer' %}" method="POST" class="mt-3">
+              {% csrf_token %}
+              <input type="hidden" name="order_id" value="{{ order.order.order.id }}">
+              <button type="submit" class="btn btn-warning text-white">Ask Customer to Specify Details</button>
+            </form>
+          </div>
+  
+          <div class="order-info my-4 shadow p-4">
+            
+            <h4 class="mb-5">Boost Progression</h4>
+            {% if order.order.order.game_type == 'D' %}
+            <div class="from row">
+              <p class="my-3 text-uppercase col-4 px-0">From</p>
+              <img class="text-center col-4 px-0" src="{{order.order.current_rank.get_image_url}}" width="70" />
+              <div class="col-4 px-0">
+                <!-- Here Sara Division Range I II III .. Or V IV III ... -->
+                {% if order.order.order.game.link == 'wildRift' %}
+                <p class="my-3 text-uppercase px-0 mb-0">{{order.order.current_rank}} {% if order.order.current_rank|lower != 'master' %} {{ order.order.current_division|romanize_division }} {% endif %}</p>
+
+                {% elif order.order.order.game.link == 'lol' or order.order.order.game.link == 'pubg' or order.order.order.game.link == 'tft' %}
+                <p class="my-3 text-uppercase px-0 mb-0">{{order.order.current_rank}} {{ order.order.current_division|romanize_division }}</p>
+
+                {% elif order.order.order.game.link == 'valorant' or order.order.order.game.link == 'rocketLeague' %}
+                <p class="my-3 text-uppercase px-0 mb-0">{{order.order.current_rank}} {{ order.order.current_division|romanize_division_original }}</p>
+
+                {% elif order.order.order.game.link == 'hearthstone' %}
+                <p class="my-3 text-uppercase px-0 mb-0">{{order.order.current_rank}} {{ order.order.current_division|ten_romanize_division}}</p>
+
+                {% elif order.order.order.game.link == 'hok' %}
+                <p class="my-3 text-uppercase px-0 mb-0">{{order.order.current_rank}} {{ order.order.current_division|five_romanize_division}}</p>
+
+                {% endif %}
+
+                <!-- Mark Depend On Game -->
+                {% if order.order.order.game.link == 'wildRift' and order.order.current_rank|lower != 'master'  %}
+                <span class="text-secondary" style="font-size: 12px;">{{order.order.current_marks}} Marks</span>
+
+                {% elif order.order.order.game.link == 'valorant' %}
+                <span class="text-secondary" style="font-size: 12px;">{% if order.order.current_marks == 0 %} 0-20 RR {% elif order.order.current_marks == 1 %} 21-40 RR {% elif order.order.current_marks == 2 %} 41-60 RR {% elif order.order.current_marks == 3 %} 61-80 RR {% elif order.order.current_marks == 4 %} 81-100 RR {% endif %} </span>
+
+                {% elif order.order.order.game.link == 'lol' %}
+                <span class="text-secondary" style="font-size: 12px;">{% if order.order.current_marks == 0 %} 0-20 LP {% elif order.order.current_marks == 1 %} 21-40 LP {% elif order.order.current_marks == 2 %} 41-60 LP {% elif order.order.current_marks == 3 %} 61-80 LP {% elif order.order.current_marks == 4 %} 81-99 LP {% elif order.order.current_marks == 5 %} SERIES {% endif %} </span>
+
+                {% elif order.order.order.game.link == 'tft' %}
+                <span class="text-secondary" style="font-size: 12px;">{% if order.order.current_marks == 0 %} 0-20 LP {% elif order.order.current_marks == 1 %} 21-40 LP {% elif order.order.current_marks == 2 %} 41-60 LP {% elif order.order.current_marks == 3 %} 61-80 LP {% elif order.order.current_marks == 4 %} 81-100 LP {% endif %} </span>
+
+                {% elif order.order.order.game.link == 'hearthstone' %}
+                <span class="text-secondary" style="font-size: 12px;">{% if order.order.current_marks == 0 %} 3 STAR {% elif order.order.current_marks == 1 %} 2 STAR {% elif order.order.current_marks == 2 %} 1 STAR {% endif %} </span>
+
+                {% elif order.order.order.game.link == 'hok' %}
+                <span class="text-secondary" style="font-size: 12px;">{{order.order.current_marks}} Stars</span>
+
+                {% endif %}
+                <!-- Here Sara Check Marks For Pubg -->
+              </div>
+            </div>
+  
+            <i class="fa-solid fa-angle-down my-3" style="color: var(--secondary-color);"></i>
+  
+            <div class="now row">
+              <p class="my-3 text-uppercase col-4 px-0">Now</p>
+              <img class="text-center col-4 px-0" src="{{order.order.reached_rank.get_image_url}}" width="70" />
+              <div class="col-4 px-0">
+                <!-- Here Sara Division Range I II III .. Or V IV III ... -->
+                {% if order.order.order.game.link == 'wildRift' %}
+                <p class="my-3 text-uppercase px-0 mb-0">{{order.order.reached_rank}} {% if order.order.reached_rank|lower != 'master' %} {{ order.order.reached_division|romanize_division }} {% endif %}</p>
+
+                {% elif order.order.order.game.link == 'lol' or order.order.order.game.link == 'pubg' or order.order.order.game.link == 'tft' %}
+                <p class="my-3 text-uppercase px-0 mb-0">{{order.order.reached_rank}} {{ order.order.reached_division|romanize_division }}</p>
+
+                {% elif order.order.order.game.link == 'valorant' or order.order.order.game.link == 'rocketLeague' %}
+                <p class="my-3 text-uppercase px-0 mb-0">{{order.order.reached_rank}} {{ order.order.reached_division|romanize_division_original }}</p>
+
+                {% elif order.order.order.game.link == 'hearthstone' %}
+                <p class="my-3 text-uppercase px-0 mb-0">{{order.order.reached_rank}} {{ order.order.reached_division|ten_romanize_division }}</p>
+
+                {% elif order.order.order.game.link == 'hok' %}
+                <p class="my-3 text-uppercase px-0 mb-0">{{order.order.reached_rank}} {{ order.order.reached_division|five_romanize_division }}</p>
+
+                {% endif %}
+
+                <!-- Mark Depend On Game -->
+                {% if order.order.order.game.link == 'wildRift' and order.order.reached_rank|lower != 'master' %}
+                <span class="text-secondary" style="font-size: 12px;">{{order.order.reached_marks}} Marks</span>
+
+                {% elif order.order.order.game.link == 'valorant' %}
+                <span class="text-secondary" style="font-size: 12px;">{% if order.order.reached_marks == 0 %} 0-20 RR {% elif order.order.reached_marks == 1 %} 21-40 RR {% elif order.order.reached_marks == 2 %} 41-60 RR {% elif order.order.reached_marks == 3 %} 61-80 RR {% elif order.order.reached_marks == 4 %} 81-100 RR {% endif %} </span>
+
+                {% elif order.order.order.game.link == 'lol' %}
+                <span class="text-secondary" style="font-size: 12px;">{% if order.order.reached_marks == 0 %} 0-20 LP {% elif order.order.reached_marks == 1 %} 21-40 LP {% elif order.order.reached_marks == 2 %} 41-60 LP {% elif order.order.reached_marks == 3 %} 61-80 LP {% elif order.order.reached_marks == 4 %} 81-99 LP {% elif order.order.reached_marks == 4 %} SERIES {% endif %} </span>
+
+                {% elif order.order.order.game.link == 'tft' %}
+                <span class="text-secondary" style="font-size: 12px;">{% if order.order.reached_marks == 0 %} 0-20 LP {% elif order.order.reached_marks == 1 %} 21-40 LP {% elif order.order.reached_marks == 2 %} 41-60 LP {% elif order.order.reached_marks == 3 %} 61-80 LP {% elif order.order.reached_marks == 4 %} 81-100 LP {% endif %} </span>
+
+                {% elif order.order.order.game.link == 'hearthstone' %}
+                <span class="text-secondary" style="font-size: 12px;">{% if order.order.reached_marks == 0 %} 3 STAR {% elif order.order.reached_marks == 1 %} 2 STAR {% elif order.order.reached_marks == 2 %} 1 STAR {% endif %} </span>
+
+                {% elif order.order.order.game.link == 'hok' %}
+                <span class="text-secondary" style="font-size: 12px;">{{order.order.reached_marks}} Stars</span>
+
+                {% endif %}
+                <!-- Here Sara Check Marks For Pubg -->
+              </div>
+            </div>
+  
+            <i class="fa-solid fa-angle-down my-3" style="color: var(--secondary-color);"></i>
+  
+            <div class="to row">
+              <p class="my-3 text-uppercase col-4 px-0">TO</p>
+              <img class="text-center col-4 px-0" src="{{order.order.desired_rank.get_image_url}}" width="70" />
+              <div class="col-4 px-0">
+                <!-- Here Sara Division Range I II III .. Or V IV III ... -->
+                {% if order.order.order.game.link == 'wildRift' %}
+                <p class="my-3 text-uppercase px-0 mb-0">{{order.order.desired_rank}} {% if order.order.desired_rank|lower != 'master' %} {{ order.order.desired_division|romanize_division }} {% endif %}</p>
+
+                {% elif order.order.order.game.link == 'lol' or order.order.order.game.link == 'pubg' or order.order.order.game.link == 'tft' %}
+                <p class="my-3 text-uppercase px-0 mb-0">{{order.order.desired_rank}} {{ order.order.desired_division|romanize_division }}</p>
+
+                {% elif order.order.order.game.link == 'valorant' or order.order.order.game.link == 'rocketLeague' %}
+                <p class="my-3 text-uppercase px-0 mb-0">{{order.order.desired_rank}} {{ order.order.desired_division|romanize_division_original }}</p>
+
+                {% elif order.order.order.game.link == 'hearthstone' %}
+                <p class="my-3 text-uppercase px-0 mb-0">{{order.order.desired_rank}} {{ order.order.desired_division|ten_romanize_division }}</p>
+
+                {% elif order.order.order.game.link == 'hok' %}
+                <p class="my-3 text-uppercase px-0 mb-0">{{order.order.desired_rank}} {{ order.order.desired_division|five_romanize_division }}</p>
+
+                {% endif %}
+              </div>
+            </div>
+            
+            <hr>
+
+            <div class="process">
+              <p>Progress: <span class="fw-bold">{{order.percentage}}%</span> of 100%</p>
+              <div class="progress mb-3" style="height: 17px; background-color: #02a95c1f;">
+                <div class="progress-bar" role="progressbar" style="width: {{ order.percentage }}%; height: 17px; background-color: var(--secondary-color)" aria-valuenow="{{ order.percentage }}" aria-valuemin="0" aria-valuemax="100">
+                </div>
+              </div>
+            </div>
+
+            <div class="payout-progress mt-4">
+              <p>Payout Progress: <span class="fw-bold">${{order.now_price}}</span> of ${{order.order.order.actual_price}}</p>
+              <div class="progress mb-3" style="height: 17px; background-color: #02a95c1f;">
+                <div class="progress-bar" role="progressbar" style="width: {{ order.percentage }}%; height: 17px; background-color: var(--secondary-color)" aria-valuenow="{{ order.percentage }}" aria-valuemin="0" aria-valuemax="100">
+                </div>
+              </div>
+            </div>
+
+            {% if order.percentage < 80 %}
+            <form action="{% url 'drop.order' %}" method="POST" class="mt-3">
+              {% csrf_token %}
+              <input type="hidden" name="order_id" value="{{ order.order.order.id }}">
+              <input type="hidden" name="order_game_id" value="{{ order.order.order.game_id }}">
+              <button type="submit" class="btn submit-btn"><i class="fa-solid fa-xmark"></i> Drop Order</button>
+            </form>
+            {% endif %}
+            <hr>
+            <!-- Here We Change Update Component Depend On Game -->
+            {% if order.order.order.game.link == 'wildRift' %}
+              {% include 'wildrift/order_update.html' %}
+
+            {% elif order.order.order.game.link == 'valorant' %}
+              {% include 'valorant/order_update.html' with valorant_ranks=valorant_ranks %}
+
+            {% elif order.order.order.game.link == 'lol' %}
+              {% include 'leagueOfLegends/order_update.html' with lol_ranks=lol_ranks %}
+
+            {% elif order.order.order.game.link == 'pubg' %}
+              {% include 'pubg/order_update.html' with pubg_ranks=pubg_ranks %}
+
+            {% elif order.order.order.game.link == 'tft' %}
+              {% include 'tft/order_update.html' with tft_ranks=tft_ranks %}
+
+            {% elif order.order.order.game.link == 'hearthstone' %}
+              {% include 'hearthstone/order_update.html' with hearthstone_ranks=hearthstone_ranks %}
+
+            {% elif order.order.order.game.link == 'rocketLeague' %}
+              {% include 'rocketLeague/order_update.html' with rocketLeague_ranks=rocketLeague_ranks %}
+            
+            {% elif order.order.order.game.link == 'hok' %}
+              {% include 'honorOfKings/order_update.html' with hok_ranks=hok_ranks %} 
+            {% endif %}
+            
+            {% elif order.order.order.game_type == 'P' %}
+              <!-- Placement -->
+              <div class="last">
+                <p class="my-3 text-uppercase px-0">Last Rank</p>
+                <img class="text-center px-0" src="{{order.order.last_rank.get_image_url}}"  width="200" height="200" />
+                <p class="my-3 text-uppercase px-0">{{order.order.last_rank.rank_name}}</p>
+                <p class="my-3 text-uppercase px-0">Number Of Matches : <span class="text-secondary fs-5">{{order.order.number_of_match}}</span></p>
+              </div>
+              <hr>
+            {% elif order.order.order.game_type == 'S' %}
+              <!-- Seasonal -->
+              <div class="last">
+                <p class="my-3 text-uppercase px-0">Current Rank</p>
+                <img class="text-center px-0" src="{{order.order.current_rank.get_image_url}}"  width="200" height="200" />
+                <p class="my-3 text-uppercase px-0">{{order.order.current_rank.rank_name}}</p>
+                <p class="my-3 text-uppercase px-0">
+                  Number of Wins : <span class="text-secondary fs-5">{{order.order.number_of_wins}}</span></p>
+              </div>
+              <hr>
+            {% elif order.order.order.game_type == 'T' %}
+              <!-- Tournament -->
+              <div class="last">
+                <p class="my-3 text-uppercase px-0">Current League</p>
+                <img class="text-center px-0" src="{{order.order.current_league.get_image_url}}"  width="200" height="200" />
+                <p class="my-3 text-uppercase px-0">{{order.order.current_league.rank_name}}</p>
+              </div>
+              <hr>
+            {% endif %}
+            <div class="my-3">
+              {% if order.order.order.game_type == 'P' or order.order.order.game_type == 'S' or order.order.order.game_type == 'T' %}
+              <!-- Button trigger modal -->
+              <button type="button" class="btn submit-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop-{{ order.order.order.id }}">
+                <i class="fa-regular fa-circle-check"></i> Complete Order
+              </button>
+              {% elif order.order.reached_rank.id > order.order.desired_rank.id %}
+              <!-- Button trigger modal -->
+              <button type="button" class="btn submit-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop-{{ order.order.order.id }}">
+                <i class="fa-regular fa-circle-check"></i> Complete Order
+              </button>
+              {% elif order.order.reached_rank.id == order.order.desired_rank.id and order.order.reached_division >= order.order.desired_division  %}
+              <!-- Button trigger modal -->
+              <button type="button" class="btn submit-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop-{{ order.order.order.id }}">
+                <i class="fa-regular fa-circle-check"></i> Complete Order
+              </button>
+              {% endif %}
+              <!-- Modal -->
+              <div class="modal modal-lg fade" id="staticBackdrop-{{ order.order.order.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog" style="background-color: var(--main-color);">
+                  <div class="modal-content" style="background-color: var(--main-color);">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="staticBackdropLabel">Upload Complete Image</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: var(--secondary-color); !important"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p id="image-over-size-error" class="text-danger"></p>
+                      <form action="{% url 'order.upload.image' %}" method="POST" enctype="multipart/form-data" id="complete-image-upload">
+                        {% csrf_token %}
+                        {% if error %} <p class="error text-danger">{{error}}</p> {% endif %}
+                        <input type="hidden" name="order_id" value="{{ order.order.order.id }}">
+
+                        <!-- Image preview -->
+                        <div class="d-flex justify-content-center align-items-center">
+                          <img src="#" alt="Preview" class="image-preview" style="max-width: 100%; max-height: 400px; display: none; margin-bottom: 3rem;">
+                        </div>
+
+                        <label for="images" class="drop-container dropcontainer">
+                          <span class="drop-title">Drop files here</span>
+                          or
+                          <input type="file" name="finish_image" class="finish_image" required>
+                        </label>
+
+                        <div class="text-end">
+                          <button type="submit" class="btn submit-btn my-3">Submit</button>
+                        </div>
+                      </form>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        
+        <div class="col-lg-9 col-12 px-lg-4 px-0">
+          <div class="chat-customer p-4">
+            <div class="chat-header active">
+              Chat With Customer
+            </div>
+            <div class="chat">
+              <div class="container messages-section">
+                <div class="row align-content-between">
+                  <div class="col-12 row-cols-1 flex-grow-1 chat-customer-container" id="chat-box-order-{{order.order.order.id}}">
+                    <div class="form-group px-4 py-2">
+                      {% if order.messages %}
+                      <div class="chatbox" id="chatbox-order-{{order.order.order.id}}" style="padding: 4px 2px;">
+                        {% for message in order.messages %}
+                        {{message.created_on|json_script:"message_time"}}
+                        <div
+                          class="chat-message {% if message.user == request.user %} userMessage {% else %} {% if message.msg_type == 2 %} tip-message {%else%} otherMessage {% endif %} {% endif %}" style="background-color: transparent !important;">
+                          {% if message.msg_type == 2 %}
+                          <h4><span class="badge" style="background-color: var(--secondary-color);">{{ message.content }}</span></h4>
+                          <!-- <div class="mb-1">{{ message.content }}</div> -->
+                          {% else %}
+                            {% if request.user != message.user %}
+                            <div class="image">
+                              {% if message.user.image %}
+                              <img src="{{message.user.image.url}}" alt="" width="40" height="40" />
+                              {% else %}
+                              <img src="{% static 'base/images/no_profile_image.png' %}" alt="" width="40" height="40" />
+                              {% endif %}
+                            </div>
+                            {% endif %}
+                            <div class="message p-3 rounded-3 ">
+                              {% if message.user.username != request.user.username  %}
+                              <p class="username mb-1">
+                                {{ message.user.first_name }} {{ message.user.last_name }}
+                              </p>
+                              {% endif %}
+                              <p class="content mb-1">{{ message.content }}</p>
+                              <p class="text-end mb-1" style="font-size: 10px; color:#ffffffbf"> {{message.created_on}} </p>
+                            </div>
+                          {% endif %}
+                        </div>
+                        {% endfor %}
+                      </div>
+                      {% else %}
+                      <div class="chatbox" id="chatbox-order-{{order.order.order.id}}" style="padding: 4px 2px;"></div>
+                      <b class="noMessage">No Messages in this Room.</b>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <form id="booster_chat_form-order-{{order.order.order.id}}" class="col-12">
+                      {% if order.room.active %}
+                      <div class="d-flex justify-content-center">
+                      <input class="form-control" style="width: 80%;"  placeholder="Enter text here" id="my_input_order-{{order.order.order.id}}" type="text" required>
+                      <button class="btn sendButton mx-3" id="submit_button_order-{{order.order.order.id}}" type="button" value="Send">
+                        <i class="fa-solid fa-paper-plane"></i>
+                      </button>
+                    </div>
+                    {% else %}
+                    <div class="chatbox fw-bold" id="chatbox-order-{{order.order.order.id}}">
+                      <div class="chat-message text-center">
+                        Closed Chat
+                      </div>
+                    </div>
+                    {% endif %}
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+  var staticUrl = "{% static 'base/images/no_profile_image.png' %}";
+  var currentSocket = null
+</script>
+<script src="{% static 'booster/js/booster-order.js' %}"></script>
+<script src="{% static 'booster/js/image-size.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,245 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="{% static 'bootstrap/css/bootstrap.css'%}" rel="stylesheet" />
+  <link href="{% static 'fontawesome/css/all.css' %}" rel="stylesheet">
+  <link href="https://unpkg.com/aos@next/dist/aos.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'base/css/master.css'%}" />
+  <link rel="stylesheet" href="{% static 'base/css/fields.css' %}">
+  <link rel="stylesheet" href="{% static 'base/css/framework.css' %}">
+
+  <title>{% block title %}{% endblock %}</title>
+  {% block style %}
+  {% endblock %}
+</head>
+
+<body>
+  <!-- Start Header -->
+  <div class="nav" id="nav">
+    <div class="container">
+      <a href="{% url 'homepage.index' %}" class="logo">Game Boosters</a>
+      <ul class="main-nav">
+        {% if request.user.id %}
+
+        {% if request.user.is_booster %}
+
+        <li>
+          <a class="text-white" href="{% url 'edit.booster.profile' %}"> {{request.user.first_name}}
+            {{request.user.last_name}}</a>
+        </li>
+
+        <li>
+          <a href="{% url 'booster.orders' %}">Your Orders</a>
+        </li>
+
+        <li>
+          <a href="{% url 'booster.history' %}">Your Money : {{request.user.wallet.money}}$</a>
+        </li>
+
+        {% elif request.user.is_customer %}
+
+        <li>
+          <a href="{% url 'edit.customer.profile' %}">{{request.user.first_name}} {{request.user.last_name}}</a>
+        </li>
+
+        <li>
+          <a href="{% url 'customer.history' %}">WITHDRAWAL : {{request.user.wallet.money}}$</a>
+        </li>
+        {% endif %}
+
+        <li>
+          <a href="{% url 'account.logout' %}">Logout</a>
+        </li>
+
+        {% else %}
+
+        <li>
+          <a href="{% url 'account.login' %}">Log In</a>
+        </li>
+        <li>
+          <a href="{% url 'accounts.register' %}">Register</a>
+        </li>
+
+        {% endif %}
+        {% if request.user.is_booster %}
+        <li>
+          <a href="">Jobs</a>
+          <!-- Start Megamenu -->
+          <div class="mega-menu">
+            <div class="image">
+              <img src="{% static 'base/images/megamenu.webp' %}" alt="" />
+            </div>
+            <ul class="links">
+              <li>
+                <a href=""><i class="fa-solid fa-gamepad"></i> League of Legends</a>
+              </li>
+              <li>
+                <a href="{% url 'orders.jobs' %}"><i class="fa-solid fa-gamepad"></i> Valorant</a>
+              </li>
+              <li>
+                <a href=""><i class="fa-solid fa-gamepad"></i> TFT</a>
+              </li>
+              <li>
+                <a href="{% url 'orders.jobs' %}"><i class="fa-solid fa-gamepad"></i> Wild Rift</a>
+              </li>
+              <li>
+                <a href=""><i class="fa-solid fa-gamepad"></i> Dota 2</a>
+              </li>
+            </ul>
+            <ul class="links">
+              <li>
+                <a href=""><i class="fa-solid fa-gamepad"></i> Hearthstone</a>
+              </li>
+              <li>
+                <a href=""><i class="fa-solid fa-gamepad"></i> World of Warcraft</a>
+              </li>
+              <li>
+                <a href=""><i class="fa-solid fa-gamepad"></i> Mobile Legends</a>
+              </li>
+              <li>
+                <a href=""><i class="fa-solid fa-gamepad"></i> Pubg Mobile</a>
+              </li>
+              <li>
+                <a href=""><i class="fa-solid fa-gamepad"></i> Rocket League</a>
+              </li>
+            </ul>
+          </div>
+          <!-- End Megamenu -->
+        </li>
+        {% elif request.user.is_customer %}
+        <li>
+          <a href="">Orders</a>
+          <!-- Start Megamenu -->
+          <div class="mega-menu">
+            <div class="image">
+              <img src="{% static 'base/images/megamenu.webp' %}" alt="" />
+            </div>
+            <ul class="links">
+              {% for order in request.user.customer_orders.all %}
+              {% if not order.is_done %}
+              <li>
+                <a href="{% url 'accounts.customer_side' %}"><strong>Order: </strong>_{{ order.name }}</a>
+              </li>
+              {% endif %}
+              {% if forloop.last and order.is_done and not order.order_rated %}
+              <li>
+                <a href="{% url 'accounts.customer_side' %}"><strong>Order: </strong>_{{ order.name }}</a>
+              </li>
+              {% endif %}
+              {% endfor %}
+            </ul>
+            <ul class="links">
+              <li>
+                <a href="#events"><i class="far fa-calendar-alt fa-fw"></i> Events</a>
+              </li>
+              <li>
+                <a href="#pricing"><i class="fas fa-server fa-fw"></i> Pricing Plans</a>
+              </li>
+              <li>
+                <a href="#video"><i class="far fa-play-circle fa-fw"></i> Top Videos</a>
+              </li>
+              <li>
+                <a href="#stats"><i class="far fa-chart-bar fa-fw"></i> Stats</a>
+              </li>
+              <li>
+                <a href="#discount"><i class="fas fa-percent fa-fw"></i> Request A Discount</a>
+              </li>
+            </ul>
+          </div>
+          <!-- End Megamenu -->
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+  <!-- End Header -->
+
+  <!-- Start Container -->
+  {% block container %}
+  {% endblock %}
+  <!-- End Container -->
+
+  <!-- Start Footer -->
+  <!-- Start Footer -->
+  <div class="footer">
+    <div class="container">
+      <div class="box">
+        <h3>Game Booster</h3>
+        <ul class="social">
+          <li>
+            <a href="#" class="facebook">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="twitter">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="youtube">
+              <i class="fab fa-youtube"></i>
+            </a>
+          </li>
+        </ul>
+        <p class="text">
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Temporibus nulla rem, dignissimos iste aspernatur
+        </p>
+      </div>
+      <div class="box">
+        <ul class="links">
+          <li><a href="#">Important Link 1</a></li>
+          <li><a href="#">Important Link 2</a></li>
+          <li><a href="#">Important Link 3</a></li>
+          <li><a href="#">Important Link 4</a></li>
+          <li><a href="#">Important Link 5</a></li>
+        </ul>
+      </div>
+      <div class="box">
+        <div class="line">
+          <i class="fas fa-map-marker-alt fa-fw"></i>
+          <div class="info">Egypt, Giza, Inside The Sphinx, Room Number 220</div>
+        </div>
+        <div class="line">
+          <i class="far fa-clock fa-fw"></i>
+          <div class="info">Business Hours: From 10:00 To 18:00</div>
+        </div>
+        <div class="line">
+          <i class="fas fa-phone-volume fa-fw"></i>
+          <div class="info">
+            <span>+20123456789</span>
+            <span>+20198765432</span>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="box footer-gallery">
+        <img src="imgs/gallery-01.png" alt="" />
+        <img src="imgs/gallery-02.png" alt="" />
+        <img src="imgs/gallery-03.jpg" alt="" />
+        <img src="imgs/gallery-04.png" alt="" />
+        <img src="imgs/gallery-05.jpg" alt="" />
+        <img src="imgs/gallery-06.png" alt="" />
+      </div> -->
+    </div>
+    <p class="copyright">Made With &lt;3 By ITI Team</p>
+  </div>
+  <!-- End Footer -->
+  <!-- End Footer -->
+  <script src="{% static  'jQuery/jquery-3.7.0.js' %}"></script>
+  <script src="{% static  'base/js/base.js' %}"></script>
+  <script src="{% static  'base/js/script.js' %}"></script>
+  <script src="{% static 'bootstrap/js/bootstrap.js'%}"></script>
+  <script src="{% static 'bootstrap/js/bootstrap.bundle.js'%}"></script>
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
+  {% block script %}
+  {% endblock %}
+</body>
+
+</html>

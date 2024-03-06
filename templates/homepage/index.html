@@ -1,0 +1,162 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}MadBoost{% endblock %}
+{% block style %}
+<!-- SWIPER CSS -->
+<link href="{% static 'swiper/css/swiper-bundle.min.css'%}" rel="stylesheet">
+<!-- OUR STYLE -->
+<link href="{% static 'homepage/css/homepage.css' %}" rel="stylesheet">
+<!-- STYLE FEEDBACK -->
+<link href="{% static 'components/css/customer-feedbacks.css'%}" rel="stylesheet" />
+<!-- STYLE MOTIVATION -->
+<link href="{% static 'components/css/motivation.css'%}" rel="stylesheet" />
+<!-- STYLE INFORMATION -->
+<link href="{% static 'components/css/information.css'%}" rel="stylesheet" />
+{% endblock %}
+{% block container %}
+<div class="homepage">
+  <div class="container">
+    <!-- ------------------------- Landing ------------------------- -->
+    <div class="landing row justify-content-between align-items-center">
+      <div class="text col-6">
+        <h1>REACH YOUR RANK <span>GOALS</span></h1>
+        <p>with <span>MadBoost.gg</span> your ally in the eSports arena.</p>
+      </div>
+      <div class="image col-6">
+        <img src="{% static 'homepage/images/Logo.png' %}" class="img-fluid" alt="Landing">
+      </div>
+    </div>
+
+
+    <!-- ------------------------- Gaming ------------------------- -->
+    <div class="games swiper py-5">
+      <div class="games-swiper" id="games">
+
+        <div class="head d-flex justify-content-between align-items-center">
+          <h1>Games</h1>
+
+          <div class="navigation-buttons">
+            <!-- Navigation Buttons -->
+            <div class="games-swiper-button-prev">
+              <i class="fa-solid fa-chevron-left fs-3"></i>
+            </div>
+  
+            <div class="games-swiper-button-next">
+              <i class="fa-solid fa-chevron-right fs-3"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="swiper-wrapper mt-4">
+          {% for game in games %}
+            <div class="swiper-slide game">
+              <div class="game-logo">
+                <img src="{{game.get_logo_image_url}}" class="img-fluid" alt="{{game.name}}">
+              </div>
+              <p class="mt-2 text-center">{{game.name}}</p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- ------------------------- Last Orders ------------------------- -->
+    <div class="last-orders swiper py-5">
+      <div class="last-orders-swiper" id="last-orders">
+
+        <div class="head d-flex justify-content-between align-items-center">
+          <h1>Last Orders</h1>
+
+          <div class="navigation-buttons">
+            <!-- Navigation Buttons -->
+            <div class="last-orders-swiper-button-prev">
+              <i class="fa-solid fa-chevron-left fs-3"></i>
+            </div>
+  
+            <div class="last-orders-swiper-button-next">
+              <i class="fa-solid fa-chevron-right fs-3"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="swiper-wrapper mt-4">
+          {% for order in last_orders %}
+            <div class="swiper-slide order">
+
+              <div class="banner">
+                <img src="{{order.order.game.get_banner_image_url}}" class="img-fluid" alt="{{order.order.game.name}}">
+              </div>
+
+              <div class="title d-flex justify-content-between align-items-center my-2">
+                <h1>{{order.order.game.name}}</h1>
+                <p class="solo-or-duo">{% if order.order.duo_boosting %}Duo{% else %}Solo{% endif %}</p>
+              </div>
+
+              <div class="information d-flex justify-content-between align-items-center">
+                <div class="booster d-flex justify-content-center align-items-center">
+
+                  <div class="image">
+                    <img src="{{order.order.booster.get_image_url}}" class="img-fluid" alt="Booster Image">
+                  </div>
+
+                  <div class="name ms-3">
+                    <p class="mb-0">Booster</p>
+                    <p class="mb-0">{{order.order.booster.username}}</p>
+                  </div>
+                </div>
+
+                <div class="rank">
+                  {% if order.order.game_type == 'D' %}
+                    <p class="mb-0">Rank</p>
+                    {% if order.order.game.link == 'wildRift' or order.order.game.link == 'lol' or order.order.game.link == 'pubg' or order.order.game.link == 'tft' %}
+                      <p class="mb-0 text-capitalize">{{order.reached_rank}} {{ order.reached_division|romanize_division }}</p>
+
+                    {% elif order.order.game.link == 'rocketLeague' %}
+                      <p class="mb-0 text-capitalize">{{order.reached_rank}} {{ order.reached_division|romanize_division_original }}</p>
+
+                    {% elif order.order.game.link == 'hearthstone' %}
+                      <p class="mb-0 text-capitalize">{{order.reached_rank}} {{ order.reached_division|ten_romanize_division }}</p>
+
+                    {% elif order.order.game.link == 'hok' %}
+                      <p class="mb-0 text-capitalize">{{order.reached_rank}} {{ order.reached_division|five_romanize_division }}</p>
+
+                    {% else %}
+                      <p class="mb-0 text-capitalize">{{order.reached_rank}} {{ order.reached_division }}</p>
+
+                    {% endif %}
+                  
+                  {% else %}
+                    <p class="mb-0">Matches</p>
+                    <p class="mb-0 text-capitalize">{{order.number_of_match}} Mathces</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- ------------------------- Import Feedback Component ------------------------- -->
+    {% include 'components/customer_feedbacks.html' with feedbacks=feedbacks %}
+
+    <!-- ------------------------- Import Information Component ------------------------- -->
+    {% include 'components/information.html' %}
+
+    <!-- ------------------------- Import Motivation ------------------------- -->
+    {% include 'components/motivation.html' %}
+
+  </div>
+</div>
+
+{% endblock %}
+{% block script %}
+
+<!-- SWIPER JS -->
+<script src="{% static 'swiper/js/swiper-bundle.min.js' %}"></script>
+<!-- OUR SCRIPTS -->
+<script src="{% static 'components/js/customer-feedbacks.js'%}"></script>
+<script src="{% static 'homepage/js/games.js'%}"></script>
+<script src="{% static 'homepage/js/last-orders.js'%}"></script>
+{% endblock %}

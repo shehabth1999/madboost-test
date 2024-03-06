@@ -1,0 +1,51 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %}Game Boosters{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'homepage/css/homepage.css' %}">
+{% endblock %}
+{% block container %}
+<!-- Start Landing -->
+<div class="landing">
+  <div class="container">
+    <div class="text text-white">
+      <h1>Welcome, To Game Booster World!</h1>
+      <p class="fs-4 text-white">Reach Your Ranking Goals Effortlessly and Quickly with Premium Boosting Services!</p>
+      <p class="fs-6">Transform Your Gaming Experience with the Best Multi-Boosting Project - Boosteria!</p>
+    </div>
+    <div class="image">
+      <img src="{% static 'base/images/megamenu.webp' %}" alt="" />
+    </div>
+  </div>
+  <a href="#games" class="go-down">
+    <i class="fas fa-angle-double-down fa-2x"></i>
+  </a>
+</div>
+<!-- End Landing -->
+
+<!-- Start Gaming -->
+<div class="games container-fluid px-0" id="games">
+  <h2 class="main-title">CHOOSE YOUR GAME TO GET DESIRED RANK</h2>
+  <div class="my-5 container px-0">
+    {% for game in games %}
+    <div class="box">
+      <div class="data">
+        <img src="{%static 'games/images/'|add:game.image%}" alt={{game.name}} />
+      </div>
+      <div class="info">
+        <h3>{{game.name}}</h3>
+        <a href="{{ game.link }}" class="fs-5 text-white my-2">Start Boost &rarr;</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+<!-- End Gaming -->
+{% endblock %}
+{% block script %}
+<script>
+  function redirectToGame(link) {
+    window.location.href = link;
+  }
+</script>
+{% endblock %}
