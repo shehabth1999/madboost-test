@@ -1,0 +1,1 @@
+web: gunicorn gameBoosterss.wsgi --log-file -
